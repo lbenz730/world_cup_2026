@@ -2,38 +2,31 @@ library(tidyverse)
 library(lubridate)
 library(rstan)
 source('helpers.R')
-options(mc.cores=parallel::detectCores())
+options(mc.cores=8)
 
 ### Read In International Soccer Scores
-### We'll just use data from 2016 onwards
-df_scores <- 
-  read_csv('https://raw.githubusercontent.com/martj42/international_results/refs/heads/master/results.csv') %>% 
-  mutate('year' = year(date)) %>% 
-  filter(year >= 2016) %>% 
-  filter(!is.na(home_score), !is.na(away_score))
+### Filter to pre-WC to avoid double-counting with wc_2026 below
+wc_start <- as.Date('2026-06-11')
+df_scores <-
+  read_csv('https://raw.githubusercontent.com/martj42/international_results/refs/heads/master/results.csv') %>%
+  mutate('year' = year(date)) %>%
+  filter(year >= 2016, date < wc_start) %>%
+  filter(!is.na(home_score), !is.na(away_score)) %>%
+  mutate('home_team' = recode(home_team, 'Turkey' = 'Turkiye', 'Türkiye' = 'Turkiye', 'Czech Republic' = 'Czechia'),
+         'away_team' = recode(away_team, 'Turkey' = 'Turkiye', 'Türkiye' = 'Turkiye', 'Czech Republic' = 'Czechia'))
 
-### Scores From Current Euro and Copa America Tournaments
-# euro_2024 <- 
-#   read_csv('data/euro2024_schedule.csv') %>% 
-#   mutate('neutral' = (team1 != location & team2 != location),
-#          'tournament' = 'European Championship') %>% 
-#   mutate('home_team' = ifelse(team2 == location, team2, team1),
-#          'away_team' = ifelse(team2 == location, team1, team2),
-#          'home_score' = ifelse(team2 == location, team2_score, team1_score),
-#          'away_score' = ifelse(team2 == location, team1_score, team2_score)) %>% 
-#   select(date, home_team, away_team, home_score, away_score, neutral, tournament) %>% 
-#   filter(!is.na(home_score))
-# 
-# copa_2024 <- 
-#   read_csv('data/copa2024_schedule.csv') %>% 
-#   mutate('neutral' = (team1 != location & team2 != location),
-#          'tournament' = 'Copa America') %>% 
-#   mutate('home_team' = ifelse(team2 == location, team2, team1),
-#          'away_team' = ifelse(team2 == location, team1, team2),
-#          'home_score' = ifelse(team2 == location, team2_score, team1_score),
-#          'away_score' = ifelse(team2 == location, team1_score, team2_score)) %>% 
-#   select(date, home_team, away_team, home_score, away_score, neutral, tournament) %>% 
-#   filter(!is.na(home_score))
+### Augment with played WC 2026 games from local schedule (updated same-day via ESPN)
+wc_2026 <-
+  read_csv('data/schedule.csv', show_col_types = F) %>%
+  mutate('date' = as.Date(date)) %>%
+  filter(!is.na(team1_score), !is.na(team2_score)) %>%
+  mutate('neutral' = !(team1 == location | team2 == location),
+         'tournament' = 'World Cup') %>%
+  mutate('home_team' = ifelse(team2 == location, team2, team1),
+         'away_team' = ifelse(team2 == location, team1, team2),
+         'home_score' = ifelse(team2 == location, team2_score, team1_score),
+         'away_score' = ifelse(team2 == location, team1_score, team2_score)) %>%
+  select(date, home_team, away_team, home_score, away_score, neutral, tournament)
 
 ### Filter out games for countries that don't play at least 20 games
 keep <- 
@@ -46,12 +39,16 @@ keep <-
   ungroup() %>% 
   filter(n >= 20) 
 
-df_scores <- 
-  df_scores %>% 
-  semi_join(keep, by = c('home_team' = 'team')) %>% 
+df_scores <-
+  df_scores %>%
+  semi_join(keep, by = c('home_team' = 'team')) %>%
   semi_join(keep, by = c('away_team' = 'team')) 
-  # bind_rows(euro_2024) %>% 
-  # bind_rows(copa_2024)
+
+if(Sys.Date() >= wc_start) {
+ df_scores <- 
+   df_scores %>% 
+   bind_rows(wc_2026)
+}
 
 ### Team IDs
 team_ids <- team_codes(df_scores)
@@ -70,8 +67,8 @@ df_scores <-
     str_detect(tournament, 'Nations League') ~ 1.25,
     str_detect(tournament, '(CONCACAF|African Cup of Nations|Copa America|Confederations|European|Asia)') ~ 2,
     str_detect(tournament, 'World Cup|WC') ~ 2.5,
-    T ~ 1) ) %>% 
-  mutate('weight' = weight * exp(-as.numeric(max(date) - date)/as.numeric(max(date) - min(date))))
+    T ~ 1) ) %>%
+  mutate('weight' = weight * exp(-as.numeric(max(date) - date) / as.numeric(max(date) - min(date))))
 
 ### List of Stan Params
 stan_data <- list(
