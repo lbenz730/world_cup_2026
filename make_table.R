@@ -207,5 +207,5 @@ make_table <- function(Group = 'all') {
   }
 }
 
-gtExtras::gtsave_extra(make_table('all'), filename = 'figures/world_cup_2026.png', vwidth = 1800)
+gtExtras::gtsave_extra(make_table('all'), filename = 'figures/world_cup_2026.png', vwidth = 2000)
 map(LETTERS[1:12], ~gtExtras::gtsave_extra(make_table(Group = .x), filename = paste0('figures/', .x, '.png')))

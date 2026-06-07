@@ -24,9 +24,6 @@ mu            = -0.07715556
 * __update_scores.R:__ Scrapes live scores from ESPN and updates __data/schedule.csv__.
 * __auto_update.R:__ Runs the full pipeline (scores → sims → tables → graphics) in one step.
 
-#### Tournament Format
-
-48 teams across 12 groups (A–L). Top 2 from each group + best 8 of 12 third-place teams advance to the Round of 32. Hosts: United States, Canada (home field advantage), Mexico (home field advantage).
 
 #### Data
 
