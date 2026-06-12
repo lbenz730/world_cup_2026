@@ -2,6 +2,9 @@
 ---
 Modeling, simulations, and predictions for the 2026 FIFA World Cup (USA, Canada, Mexico).
 
+#### Blog Post
+Full write-up with model details, simulation methodology, and predictions: [lukebenz.com/post/world_cup_2026](https://lukebenz.com/post/world_cup_2026/)
+
 #### Model Script
 
 * __fit_model.R:__ Estimates a Bayesian bivariate Poisson model using international results since 2016. For more details, see Equation (2) of [Benz and Lopez, 2021](https://arxiv.org/abs/2012.14949).
