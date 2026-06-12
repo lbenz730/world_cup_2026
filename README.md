@@ -35,7 +35,7 @@ Match results courtesy of [Mart Jürisoo](https://github.com/martj42/internation
 Flag figures courtesy of [Flaticon](https://www.flaticon.com/).
 
 #### Pre-Tournament Predictions
-![sim-results](figures/world_cup_2026.png)
+![sim-results](figures/simulation_tables/world_cup_2026.png)
 
 #### Most Likely Matchups
-![matchups-table](figures/matchups_table.png)
+![matchups-table](figures/simulation_tables/matchups_table.png)
