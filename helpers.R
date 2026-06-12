@@ -212,13 +212,6 @@ group_tiebreak <- function(standings, df_results) {
 
 ### Build R32 bracket.
 ### Requires data/third_place_combinations.csv (run data/scrape_combinations.R to generate).
-### R32 match order (matches ko_round "R32 1" through "R32 16"):
-###   R32 1:  2A vs 2B       R32 2:  1E vs 3rd(m74)   R32 3:  1F vs 2C
-###   R32 4:  1C vs 2F       R32 5:  1I vs 3rd(m77)   R32 6:  2E vs 2I
-###   R32 7:  1A vs 3rd(m79) R32 8:  1L vs 3rd(m80)   R32 9:  1D vs 3rd(m81)
-###   R32 10: 1G vs 3rd(m82) R32 11: 2K vs 2L         R32 12: 1H vs 2J
-###   R32 13: 1B vs 3rd(m85) R32 14: 1J vs 2H         R32 15: 1K vs 3rd(m87)
-###   R32 16: 2D vs 2G
 build_knockout_bracket <- function(group_stage_results) {
   get_team <- function(grp, pos) {
     filter(group_stage_results, group == grp, place == pos) %>% pull(team)
@@ -242,14 +235,16 @@ build_knockout_bracket <- function(group_stage_results) {
   }
 
   tibble(
-    'team1' = c(get_team('A', 2), get_team('E', 1), get_team('F', 1), get_team('C', 1),
-                get_team('I', 1), get_team('E', 2), get_team('A', 1), get_team('L', 1),
-                get_team('D', 1), get_team('G', 1), get_team('K', 2), get_team('H', 1),
-                get_team('B', 1), get_team('J', 1), get_team('K', 1), get_team('D', 2)),
-    'team2' = c(get_team('B', 2), get_3rd('m74'), get_team('C', 2), get_team('F', 2),
-                get_3rd('m77'), get_team('I', 2), get_3rd('m79'), get_3rd('m80'),
-                get_3rd('m81'), get_3rd('m82'), get_team('L', 2), get_team('J', 2),
-                get_3rd('m85'), get_team('H', 2), get_3rd('m87'), get_team('G', 2))
+    
+    'team1' = c(get_team('E', 1), get_team('I', 1), get_team('A', 2), get_team('F', 1),
+                get_team('K', 2), get_team('H', 1), get_team('D', 1), get_team('G', 1), 
+                get_team('C', 1), get_team('E', 2), get_team('A', 1), get_team('L', 1),
+                get_team('J', 1), get_team('D', 2), get_team('B', 1), get_team('K', 1)),
+                
+    'team2' = c(get_3rd('m74'), get_3rd('m77'), get_team('B', 2), get_team('C', 2),
+                get_team('L', 2), get_team('J', 2), get_3rd('m81'), get_3rd('m82'),
+                get_team('F', 2), get_team('I', 2), get_3rd('m79'), get_3rd('m80'),
+                get_team('H', 2), get_team ('G', 2), get_3rd('m85'), get_3rd('m87'))
   )
 }
 

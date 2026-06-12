@@ -8,7 +8,7 @@ source('helpers.R')
 
 n_sims <- 10000
 set.seed(12345)
-run_date <- max(Sys.Date(), as.Date('2026-06-11'))
+run_date <- max(Sys.Date() - (as.integer(format(Sys.time(), '%H')) < 12), as.Date('2026-06-10'))
 
 ### Coefficients
 posterior <- read_rds('model_objects/posterior.rds')

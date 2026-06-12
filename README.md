@@ -33,3 +33,6 @@ Flag figures courtesy of [Flaticon](https://www.flaticon.com/).
 
 #### Pre-Tournament Predictions
 ![sim-results](figures/world_cup_2026.png)
+
+#### Most Likely Matchups
+![matchups-table](figures/matchups_table.png)
