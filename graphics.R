@@ -7,6 +7,8 @@ options(future.fork.enable = T)
 options(dplyr.summarise.inform = F)
 plan(multicore(workers = parallel::detectCores() - 1))
 source('helpers.R')
+dir.create('figures/round_advance_probs', showWarnings = FALSE)
+dir.create('figures/simulation_tables', showWarnings = FALSE)
 
 history <-
   read_csv('predictions/history.csv', show_col_types = F) %>%
@@ -47,22 +49,22 @@ history_plot <- function(data, y_col, y_label, subtitle_, ncol_ = 4) {
 
 ### Advancement probability over time (by group, 3×4 layout for 12 groups)
 history_plot(history, 'r32', 'Chances of Reaching Round of 32', 'R32 Chances Over Time') 
-ggsave('figures/r32.png', height = 14/1.2, width = 16/1.2)
+ggsave('figures/round_advance_probs/r32.png', height = 14/1.2, width = 16/1.2)
 
-history_plot(history, 'r16', 'Chances of Reaching Round of 16', 'R16 Chances Over Time') 
-ggsave('figures/r16.png', height = 14/1.2, width = 16/1.2)
+history_plot(history, 'r16', 'Chances of Reaching Round of 16', 'R16 Chances Over Time')
+ggsave('figures/round_advance_probs/r16.png', height = 14/1.2, width = 16/1.2)
 
-history_plot(history, 'qf', 'Chances of Reaching Quarterfinals', 'QF Chances Over Time') 
-ggsave('figures/qf.png', height = 14/1.2, width = 16/1.2)
+history_plot(history, 'qf', 'Chances of Reaching Quarterfinals', 'QF Chances Over Time')
+ggsave('figures/round_advance_probs/qf.png', height = 14/1.2, width = 16/1.2)
 
-history_plot(history, 'sf', 'Chances of Reaching Semifinals', 'SF Chances Over Time') 
-ggsave('figures/sf.png', height = 14/1.2, width = 16/1.2)
+history_plot(history, 'sf', 'Chances of Reaching Semifinals', 'SF Chances Over Time')
+ggsave('figures/round_advance_probs/sf.png', height = 14/1.2, width = 16/1.2)
 
-history_plot(history, 'finals', 'Chances of Reaching Finals', 'Finals Chances Over Time') 
-ggsave('figures/finals.png', height = 14/1.2, width = 16/1.2)
+history_plot(history, 'finals', 'Chances of Reaching Finals', 'Finals Chances Over Time')
+ggsave('figures/round_advance_probs/finals.png', height = 14/1.2, width = 16/1.2)
 
-history_plot(history, 'champ', 'Chances of Winning Tournament', 'Title Chances Over Time') 
-ggsave('figures/champ.png', height = 14/1.2, width = 16/1.2)
+history_plot(history, 'champ', 'Chances of Winning Tournament', 'Title Chances Over Time')
+ggsave('figures/round_advance_probs/champ.png', height = 14/1.2, width = 16/1.2)
 
 ### Elimination snapshot — stacked bar chart
 df_elim <-
@@ -99,7 +101,7 @@ ggplot(df_elim, aes(x = team, y = elim_prob)) +
         axis.ticks.x = element_blank(),
         legend.position = 'bottom')
 
-ggsave('figures/elim.png', height = 9/1.2, width = 20/1.2)
+ggsave('figures/round_advance_probs/elim.png', height = 9/1.2, width = 20/1.2)
 
 ### R32 advancement by points + GD tile chart
 gs_results <- read_rds('predictions/sim_rds/group_stage_results.rds')
@@ -124,7 +126,7 @@ ggplot(df_tile, aes(x = points, y = goal_diff)) +
        fill = 'R32 Probability') + 
   theme(legend.position = 'bottom')
 
-ggsave('figures/r32_tile.png', height = 9/1.2, width = 12/1.2)
+ggsave('figures/round_advance_probs/r32_tile.png', height = 9/1.2, width = 12/1.2)
 
 ### Most likely knockout matchups — gt table (5-round layout with spanners)
 process_round <- function(results, round_name, top_n = 16) {
@@ -205,4 +207,4 @@ df_matchups %>%
       cells_column_labels(columns = all_of(divider_cols))
     )
   ) %>%
-  gtsave('figures/matchups_table.png', vwidth = 3000)
+  gtsave('figures/simulation_tables/matchups_table.png', vwidth = 3000)

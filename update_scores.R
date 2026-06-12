@@ -2,6 +2,15 @@ library(XML)
 library(RCurl)
 library(tidyverse)
 
+### ESPN renders team names with encoding artifacts and occasionally uses different
+### spellings than the schedule. Map known mismatches here.
+espn_name_map <- c(
+  'Bosnia-Herzegovina' = 'Bosnia and Herzegovina',
+  'Congo DR'           = 'DR Congo',
+  'Cura ao'            = 'Curaçao',
+  'T rkiye'            = 'Turkiye'
+)
+
 get_scores <- function(date, schedule) {
   print(date)
   date_ <- gsub('-', '', date)
@@ -9,44 +18,82 @@ get_scores <- function(date, schedule) {
   raw <- tryCatch(readHTMLTable(getURL(url)), error = function(e) NULL)
   if(is.null(raw) || length(raw) == 0) return(NULL)
 
-  scores <- raw[[1]]
-
-  penalties_ix <- which(str_detect(scores[, 2], 'FT-Pens'))
-
   tms <- unique(c(schedule$team1, schedule$team2))
   tms <- tms[!is.na(tms)]
 
-  df <-
-    tibble('date' = as.Date(date_, '%Y%m%d'),
-           'team1_score' = map_dbl(str_extract_all(scores[, 2], '\\d+'), ~as.numeric(.x[1])),
-           'team2_score' = map_dbl(str_extract_all(scores[, 2], '\\d+'), ~as.numeric(.x[2])),
-           'team1' = gsub('.*\\s+.\\s+..', '', gsub('\\s[A-Z]+\\d+.*$', '', scores[, 1])),
-           'team2' = gsub('.*\\s+.\\s+..', '', gsub('\\s[A-Z]+$', '', scores[, 2])),
-           'shootout_winner' = NA)
-
-  if(length(penalties_ix) > 0) {
-    penalties_winners <-
-      map_chr(scores[penalties_ix, 1], function(x) {
-        winner <- tms[map_lgl(tms, ~grepl(paste(.x, '(win|advance) \\d+-\\d+ on penalties'), x))]
-        if(length(winner) == 0) return(NA_character_)
-        winner
-      })
-    df$shootout_winner[penalties_ix] <- penalties_winners
-    df$team1[penalties_ix] <-
-      gsub('\\s+(win|advance) \\d+-\\d+ on penalties', '', df$team1[penalties_ix])
-    for(t in tms) {
-      df$team1[penalties_ix] <-
-        map_chr(df$team1[penalties_ix], ~ifelse(strsplit(.x, t)[[1]][1] == '', t, .x))
-    }
+  ### Strip non-ASCII encoding artifacts (e.g. "Â ") and normalize whitespace
+  clean_str <- function(x) {
+    trimws(gsub('\\s+', ' ', gsub('[^a-zA-Z0-9 \\-]', ' ', x)))
   }
 
-  df <-
-    bind_rows(df, select(df, date,
-                         'team2' = team1, 'team1' = team2,
-                         'team1_score' = team2_score, 'team2_score' = team1_score,
-                         shootout_winner))
+  fix_names <- function(x) {
+    mapped <- espn_name_map[x]
+    ifelse(is.na(mapped), x, mapped)
+  }
 
-  return(df)
+  ### Parse one HTML table. ESPN column structure (consistent for all game states):
+  ###   V1 = team1 name  ("Mexico", "South Korea")
+  ###   V2 = " v {team2}" for upcoming, or " {score} {team2}" for completed
+  ###   V3 = kickoff time for upcoming, "FT" or "FT-Pens" for completed
+  parse_table <- function(tbl) {
+    if(is.null(tbl) || ncol(tbl) < 2 || nrow(tbl) == 0) return(NULL)
+    tryCatch({
+      v1 <- clean_str(as.character(tbl[, 1]))
+      v2 <- clean_str(as.character(tbl[, 2]))
+
+      completed <- str_detect(v2, '\\d+ - \\d+')
+
+      n <- nrow(tbl)
+      team1           <- v1
+      team2           <- rep(NA_character_, n)
+      team1_score     <- rep(NA_real_, n)
+      team2_score     <- rep(NA_real_, n)
+      shootout_winner <- rep(NA_character_, n)
+
+      # Completed: V2 = "2 - 0 South Africa"
+      if(any(completed)) {
+        sc <- str_extract(v2[completed], '\\d+ - \\d+')
+        team1_score[completed] <- as.numeric(str_extract(sc, '^\\d+'))
+        team2_score[completed] <- as.numeric(str_extract(sc, '\\d+$'))
+        team2[completed] <- trimws(str_replace(v2[completed], '^.*\\d+ - \\d+\\s*', ''))
+      }
+
+      # Upcoming: V2 = "v Czechia"
+      if(any(!completed)) {
+        team2[!completed] <- trimws(str_replace(v2[!completed], '^v\\s+', ''))
+      }
+
+      # FT-Pens: check V3 if available
+      if(ncol(tbl) >= 3) {
+        v3 <- trimws(as.character(tbl[, 3]))
+        penalties_ix <- which(str_detect(v3, 'FT-Pens'))
+        if(length(penalties_ix) > 0) {
+          shootout_winner[penalties_ix] <- map_chr(v2[penalties_ix], function(x) {
+            winner <- tms[map_lgl(tms, ~grepl(paste0(.x, '.*(win|advance).*on penalties'), x))]
+            if(length(winner) == 0) NA_character_ else winner[1]
+          })
+        }
+      }
+
+      df <-
+        tibble(date = as.Date(date_, '%Y%m%d'),
+               team1 = fix_names(team1), team2 = fix_names(team2),
+               team1_score, team2_score, shootout_winner) %>%
+        filter(!is.na(team1), !is.na(team2), team1 != '', team2 != '')
+
+      if(nrow(df) == 0) return(NULL)
+
+      bind_rows(df, select(df, date,
+                           'team2' = team1, 'team1' = team2,
+                           'team1_score' = team2_score, 'team2_score' = team1_score,
+                           shootout_winner))
+    }, error = function(e) NULL)
+  }
+
+  ### Process all tables, prefer rows with actual scores over NA placeholders
+  map_dfr(raw, parse_table) %>%
+    arrange(is.na(team1_score)) %>%
+    distinct(date, team1, team2, .keep_all = TRUE)
 }
 
 ### Read In Schedule

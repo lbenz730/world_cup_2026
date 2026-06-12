@@ -1,5 +1,6 @@
 library(tidyverse)
 library(gt)
+dir.create('figures/simulation_tables', showWarnings = FALSE)
 
 df_stats <-
   read_csv('predictions/ratings.csv', show_col_types = F) %>%
@@ -207,5 +208,5 @@ make_table <- function(Group = 'all') {
   }
 }
 
-gtExtras::gtsave_extra(make_table('all'), filename = 'figures/world_cup_2026.png', vwidth = 2000)
-map(LETTERS[1:12], ~gtExtras::gtsave_extra(make_table(Group = .x), filename = paste0('figures/', .x, '.png')))
+gtExtras::gtsave_extra(make_table('all'), filename = 'figures/simulation_tables/world_cup_2026.png', vwidth = 2000)
+map(LETTERS[1:12], ~gtExtras::gtsave_extra(make_table(Group = .x), filename = paste0('figures/simulation_tables/', .x, '.png')))

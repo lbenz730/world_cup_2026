@@ -7,6 +7,7 @@ plan(multicore(workers = parallel::detectCores() - 1))
 source('helpers.R')
 library(gt)
 library(gtExtras)
+dir.create('figures/matchweek_preds', showWarnings = FALSE)
 
 ### Coefficients
 posterior <- read_rds('model_objects/posterior.rds')
@@ -196,9 +197,15 @@ mw1 <- df_preds %>% filter(date >= as.Date('2026-06-11'), date <= as.Date('2026-
 mw2 <- df_preds %>% filter(date >= as.Date('2026-06-18'), date <= as.Date('2026-06-23'))
 mw3 <- df_preds %>% filter(date >= as.Date('2026-06-24'), date <= as.Date('2026-06-27'))
 
-gtsave_extra(make_mw_table(mw1, 'Matchweek 1'), 'figures/matchweek1.png', vwidth = 1800)
-gtsave_extra(make_mw_table(mw2, 'Matchweek 2'), 'figures/matchweek2.png', vwidth = 1800)
-gtsave_extra(make_mw_table(mw3, 'Matchweek 3'), 'figures/matchweek3.png', vwidth = 1800)
+if(max(mw1$date) > Sys.Date()) {
+  gtsave_extra(make_mw_table(mw1, 'Matchweek 1'), 'figures/matchweek_preds/matchweek1.png', vwidth = 1800)
+}
+if(max(mw2$date) > Sys.Date()) {
+  gtsave_extra(make_mw_table(mw2, 'Matchweek 2'), 'figures/matchweek_preds/matchweek2.png', vwidth = 1800)
+}
+if(max(mw3$date) > Sys.Date()) {
+  gtsave_extra(make_mw_table(mw3, 'Matchweek 3'), 'figures/matchweek_preds/matchweek3.png', vwidth = 1800)
+}
 
 ### Knockout round tables
 df_preds_ko <-
@@ -214,6 +221,6 @@ for(rnd in c('R32', 'R16', 'QF', 'SF')) {
   if(nrow(df_rnd) > 0) {
     subtitles <- list(R32 = 'Round of 32', R16 = 'Round of 16', QF = 'Quarterfinals', SF = 'Semifinals')
     gtsave_extra(make_game_table(df_rnd, 'World Cup 2026 Game Predictions', subtitles[[rnd]], group_stage = F),
-                 paste0('figures/', tolower(rnd), '_preds.png'))
+                 paste0('figures/matchweek_preds/', tolower(rnd), '_preds.png'))
   }
 }
