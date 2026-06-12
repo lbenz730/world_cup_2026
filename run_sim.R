@@ -47,7 +47,7 @@ if(any(is.na(schedule$team1_score[!is.na(schedule$group)]))) {
 } else {
   gsr <- sim_group_stage(df_group_stage)
   group_stage_results <- map(1:n_sims, ~gsr)
-  r32_brackets <- future_map(1:n_sims, ~filter(schedule, str_detect(ko_round, 'R32')))
+  r32_brackets <- future_map(1:n_sims, ~filter(schedule, str_detect(ko_round, 'R32')), .options = furrr_options(seed = 8136))
 }
 
 ### R32 (16 games)
@@ -59,9 +59,9 @@ r32_brackets <-
              'team2' = ifelse(is.na(.$team2), .x$team2, .$team2)) %>%
       select(-lambda_1, -lambda_2) %>%
       adorn_xg(.)
-  })
+  }, .options = furrr_options(seed = 8137))
 
-r32_results <- future_map(r32_brackets, sim_ko_round)
+r32_results <- future_map(r32_brackets, sim_ko_round, .options = furrr_options(seed = 8138))
 
 ### R16 (8 games) — pairs of consecutive R32 winners
 r16_brackets <-
@@ -73,9 +73,9 @@ r16_brackets <-
              'team2' = map_chr(1:nrow(.), ~winners[2 * .x])) %>%
       select(-lambda_1, -lambda_2) %>%
       adorn_xg(.)
-  })
+  }, .options = furrr_options(seed = 8139))
 
-r16_results <- future_map(r16_brackets, sim_ko_round)
+r16_results <- future_map(r16_brackets, sim_ko_round, .options = furrr_options(seed = 8140))
 
 ### QF (4 games) — pairs of consecutive R16 winners
 qf_brackets <-
@@ -87,9 +87,9 @@ qf_brackets <-
              'team2' = map_chr(1:nrow(.), ~winners[2 * .x])) %>%
       select(-lambda_1, -lambda_2) %>%
       adorn_xg(.)
-  })
+  }, .options = furrr_options(seed = 8141))
 
-qf_results <- future_map(qf_brackets, sim_ko_round)
+qf_results <- future_map(qf_brackets, sim_ko_round, .options = furrr_options(seed = 8142))
 
 ### SF (2 games) — pairs of consecutive QF winners
 sf_brackets <-
@@ -101,9 +101,9 @@ sf_brackets <-
              'team2' = winners[c(2, 4)]) %>%
       select(-lambda_1, -lambda_2) %>%
       adorn_xg(.)
-  })
+  }, .options = furrr_options(seed = 8143))
 
-sf_results <- future_map(sf_brackets, sim_ko_round)
+sf_results <- future_map(sf_brackets, sim_ko_round, .options = furrr_options(seed = 8144))
 
 ### Final
 final_brackets <-
@@ -115,9 +115,9 @@ final_brackets <-
              'team2' = winners[2]) %>%
       select(-lambda_1, -lambda_2) %>%
       adorn_xg(.)
-  })
+  }, .options = furrr_options(seed = 8145))
 
-finals_results <- future_map(final_brackets, sim_ko_round)
+finals_results <- future_map(final_brackets, sim_ko_round, .options = furrr_options(seed = 8146))
 
 ### 3rd place match
 third_brackets <-
@@ -129,9 +129,9 @@ third_brackets <-
              'team2' = losers[2]) %>%
       select(-lambda_1, -lambda_2) %>%
       adorn_xg(.)
-  })
+  }, .options = furrr_options(seed = 8147))
 
-third_results <- future_map(third_brackets, sim_ko_round)
+third_results <- future_map(third_brackets, sim_ko_round, .options = furrr_options(seed = 8148))
 
 ### Aggregate Results
 r32_teams <-
