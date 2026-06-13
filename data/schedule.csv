@@ -5,7 +5,7 @@ date,team1,team2,location,group,ko_round,team1_score,team2_score,shootout_winner
 2026-06-18,Mexico,South Korea,Mexico,A,NA,NA,NA,NA
 2026-06-24,Czechia,Mexico,Mexico,A,NA,NA,NA,NA
 2026-06-24,South Africa,South Korea,Mexico,A,NA,NA,NA,NA
-2026-06-12,Canada,Bosnia and Herzegovina,Canada,B,NA,NA,NA,NA
+2026-06-12,Canada,Bosnia and Herzegovina,Canada,B,NA,1,1,NA
 2026-06-13,Qatar,Switzerland,United States,B,NA,NA,NA,NA
 2026-06-18,Switzerland,Bosnia and Herzegovina,United States,B,NA,NA,NA,NA
 2026-06-18,Canada,Qatar,Canada,B,NA,NA,NA,NA
@@ -17,7 +17,7 @@ date,team1,team2,location,group,ko_round,team1_score,team2_score,shootout_winner
 2026-06-19,Brazil,Haiti,United States,C,NA,NA,NA,NA
 2026-06-24,Scotland,Brazil,United States,C,NA,NA,NA,NA
 2026-06-24,Morocco,Haiti,United States,C,NA,NA,NA,NA
-2026-06-12,United States,Paraguay,United States,D,NA,NA,NA,NA
+2026-06-12,United States,Paraguay,United States,D,NA,4,1,NA
 2026-06-13,Australia,Turkiye,Canada,D,NA,NA,NA,NA
 2026-06-19,United States,Australia,United States,D,NA,NA,NA,NA
 2026-06-19,Turkiye,Paraguay,United States,D,NA,NA,NA,NA
