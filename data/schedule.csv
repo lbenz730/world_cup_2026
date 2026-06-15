@@ -23,14 +23,14 @@ date,team1,team2,location,group,ko_round,team1_score,team2_score,shootout_winner
 2026-06-19,Turkiye,Paraguay,United States,D,NA,NA,NA,NA
 2026-06-25,Turkiye,United States,United States,D,NA,NA,NA,NA
 2026-06-25,Paraguay,Australia,United States,D,NA,NA,NA,NA
-2026-06-14,Germany,Curaçao,United States,E,NA,NA,NA,NA
-2026-06-14,Ivory Coast,Ecuador,United States,E,NA,NA,NA,NA
+2026-06-14,Germany,Curaçao,United States,E,NA,7,1,NA
+2026-06-14,Ivory Coast,Ecuador,United States,E,NA,1,0,NA
 2026-06-20,Germany,Ivory Coast,Canada,E,NA,NA,NA,NA
 2026-06-20,Ecuador,Curaçao,United States,E,NA,NA,NA,NA
 2026-06-25,Curaçao,Ivory Coast,United States,E,NA,NA,NA,NA
 2026-06-25,Ecuador,Germany,United States,E,NA,NA,NA,NA
-2026-06-14,Netherlands,Japan,United States,F,NA,NA,NA,NA
-2026-06-14,Sweden,Tunisia,Mexico,F,NA,NA,NA,NA
+2026-06-14,Netherlands,Japan,United States,F,NA,2,2,NA
+2026-06-14,Sweden,Tunisia,Mexico,F,NA,5,1,NA
 2026-06-20,Netherlands,Sweden,United States,F,NA,NA,NA,NA
 2026-06-20,Tunisia,Japan,Mexico,F,NA,NA,NA,NA
 2026-06-25,Japan,Sweden,United States,F,NA,NA,NA,NA
