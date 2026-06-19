@@ -32,6 +32,7 @@ schedule <-
 schedule <- adorn_xg(schedule)
 
 ### Simulate Group Stage (72 games)
+cat('Simming Group Stage\n')
 df_group_stage <- filter(schedule, !is.na(group))
 
 if(any(is.na(schedule$team1_score[!is.na(schedule$group)]))) {
@@ -51,6 +52,7 @@ if(any(is.na(schedule$team1_score[!is.na(schedule$group)]))) {
 }
 
 ### R32 (16 games)
+cat('Simming R32\n')
 r32_brackets <-
   future_map(r32_brackets, ~{
     schedule %>%
@@ -64,6 +66,7 @@ r32_brackets <-
 r32_results <- future_map(r32_brackets, sim_ko_round, .options = furrr_options(seed = 8138))
 
 ### R16 (8 games) — pairs of consecutive R32 winners
+cat('Simming R16\n')
 r16_brackets <-
   future_map(r32_results, ~{
     winners <- ifelse(.x$team1_score > .x$team2_score, .x$team1, .x$team2)
@@ -78,6 +81,7 @@ r16_brackets <-
 r16_results <- future_map(r16_brackets, sim_ko_round, .options = furrr_options(seed = 8140))
 
 ### QF (4 games) — pairs of consecutive R16 winners
+cat('Simming QF\n')
 qf_brackets <-
   future_map(r16_results, ~{
     winners <- ifelse(.x$team1_score > .x$team2_score, .x$team1, .x$team2)
@@ -92,6 +96,7 @@ qf_brackets <-
 qf_results <- future_map(qf_brackets, sim_ko_round, .options = furrr_options(seed = 8142))
 
 ### SF (2 games) — pairs of consecutive QF winners
+cat('Simming SF\n')
 sf_brackets <-
   future_map(qf_results, ~{
     winners <- ifelse(.x$team1_score > .x$team2_score, .x$team1, .x$team2)
@@ -106,6 +111,7 @@ sf_brackets <-
 sf_results <- future_map(sf_brackets, sim_ko_round, .options = furrr_options(seed = 8144))
 
 ### Final
+cat('Simming Final\n')
 final_brackets <-
   future_map(sf_results, ~{
     winners <- ifelse(.x$team1_score > .x$team2_score, .x$team1, .x$team2)
@@ -120,6 +126,7 @@ final_brackets <-
 finals_results <- future_map(final_brackets, sim_ko_round, .options = furrr_options(seed = 8146))
 
 ### 3rd place match
+cat('Simming 3rd Place Match\n')
 third_brackets <-
   future_map(sf_results, ~{
     losers <- ifelse(.x$team1_score > .x$team2_score, .x$team2, .x$team1)
