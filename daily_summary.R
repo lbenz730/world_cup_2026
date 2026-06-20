@@ -3,6 +3,8 @@ library(gt)
 library(gtExtras)
 source('helpers.R')
 
+run_date <- max(Sys.Date() - (as.integer(format(Sys.time(), '%H')) < 12), as.Date('2026-06-10'))
+
 dir.create('figures/daily_summary', showWarnings = FALSE)
 
 history <-
@@ -13,9 +15,7 @@ schedule <-
   read_csv('data/schedule.csv', show_col_types = F) %>%
   mutate('date' = as.Date(date))
 
-### Use the two most recent dates in history
 dates <- sort(unique(history$date))
-run_date <- max(dates)
 today <- filter(history, date == run_date)
 
 ### Teams that played today — exit quietly if none
@@ -27,11 +27,12 @@ played_today <-
 if(length(played_today) == 0) {
   message('daily_summary.R: no completed games on ', run_date, ', skipping.')
 } else {
-  
-  ### Compute deltas vs. previous date (NA on first day)
-  if(length(dates) >= 2) {
+
+  ### Compute deltas vs. the most recent prior date in history
+  prior_dates <- dates[dates < run_date]
+  if(length(prior_dates) >= 1) {
     yesterday <-
-      filter(history, date == dates[length(dates) - 1]) %>%
+      filter(history, date == max(prior_dates)) %>%
       select(team, r32_prev = r32, r16_prev = r16)
     today <-
       today %>%
@@ -43,6 +44,7 @@ if(length(played_today) == 0) {
   } else {
     today <- mutate(today, r32_delta = NA_real_, r16_delta = NA_real_)
   }
+
   
   ### Section 1: teams that played today
   section1 <-
