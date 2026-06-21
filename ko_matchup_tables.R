@@ -169,6 +169,8 @@ img_w <- image_info(team_imgs[[1]])$width
 team_imgs <-
   map(team_imgs, ~ image_extent(.x, paste0(img_w, 'x', max_h), color = 'white', gravity = 'North'))
 
+names(team_imgs) <- active_teams$team
+
 n_col <- 8
 ko_grid <-
   image_join(team_imgs) %>%
@@ -176,14 +178,34 @@ ko_grid <-
 
 title_img <-
   image_blank(image_info(ko_grid)$width, 80, color = 'white') %>%
-  image_annotate(
-    'FIFA World Cup 2026 | Round of 32 Matchup Probabilities',
-    gravity = 'Center',
-    size = 40,
-    weight = 700,
-    color = 'black'
-  )
+  image_annotate('FIFA World Cup 2026 | Round of 32 Matchup Probabilities',
+                 gravity = 'Center',
+                 size = 40,
+                 weight = 700,
+                 color = 'black')
 
 ko_grid <-
   image_append(image_join(list(title_img, ko_grid)), stack = TRUE)
 image_write(ko_grid, 'figures/simulation_tables/r32_matchups.png', format = 'png')
+
+### Sub-grids by group triple (3 groups × 4 teams = 4 cols × 3 rows)
+group_triples <- list(c('A','B','C'), c('D','E','F'), c('G','H','I'), c('J','K','L'))
+
+for (grps in group_triples) {
+  teams_in_grps <- active_teams$team[active_teams$group %in% grps]
+  imgs_sub <-
+    image_join(team_imgs[teams_in_grps]) %>%
+    image_montage(geometry = '+2+2', tile = '4x', bg = 'white')
+
+  title_sub <-
+    image_blank(image_info(imgs_sub)$width, 80, color = 'white') %>%
+    image_annotate(paste0('FIFA World Cup 2026 | Groups ', paste(grps, collapse = ', '), ' | R32 Matchup Probabilities'),
+                   gravity = 'Center',
+                   size = 40,
+                   weight = 700,
+                   color = 'black')
+
+  image_append(image_join(list(title_sub, imgs_sub)), stack = TRUE) %>%
+    image_write(paste0('figures/simulation_tables/r32_matchups_', paste(grps, collapse = ''), '.png'),
+                format = 'png')
+}
