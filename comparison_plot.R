@@ -99,7 +99,7 @@ ggplot(df_long, aes(x = adv_prob, y = team)) +
   labs(x = "Probability of Advancing from Group Stage",
        y = NULL,
        title = "FIFA World Cup 2026",
-       subtitle = "Group Stage Advance Probability — Forecaster Comparison",
+       subtitle = "Group Stage Advance Probability - Forecaster Comparison",
        colour = NULL) +
   theme(legend.position = "bottom",
         legend.text = element_text(size = 14),

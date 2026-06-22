@@ -6,37 +6,21 @@ team_codes <- function(df) {
   return(codes)
 }
 
-### Generate Goal Expectations Given Teams + Location
-goal_expectations <- function(team_1, team_2, location) {
-  if(is.na(team_1)) {
-    return(list('lambda_1' = NA,
-                'lambda_2' = NA))
-  }
-  alpha_1 <- filter(df_ratings, team == team_1) %>% pull(alpha)
-  delta_1 <- filter(df_ratings, team == team_1) %>% pull(delta)
-  alpha_2 <- filter(df_ratings, team == team_2) %>% pull(alpha)
-  delta_2 <- filter(df_ratings, team == team_2) %>% pull(delta)
-
-  loc_1 <- case_when(team_1 == location ~ home_field,
-                     team_2 == location ~ 0,
-                     T ~ neutral_field)
-  loc_2 <- case_when(team_1 == location ~ 0,
-                     team_2 == location ~ home_field,
-                     T ~ neutral_field)
-
-  lambda_1 <- exp(mu + alpha_1 + delta_2 + loc_1)
-  lambda_2 <- exp(mu + alpha_2 + delta_1 + loc_2)
-
-  return(list('lambda_1' = lambda_1,
-              'lambda_2' = lambda_2))
-}
-
 adorn_xg <- function(df) {
-  df_xg <- future_pmap_dfr(list('team_1' = df$team1,
-                                 'team_2' = df$team2,
-                                 'location' = df$location),
-                            ~{as_tibble(goal_expectations(..1, ..2, ..3))})
-  return(bind_cols(df, df_xg))
+  na_mask <- is.na(df$team1)
+  alpha_1 <- alpha_vec[df$team1]
+  delta_1 <- delta_vec[df$team1]
+  alpha_2 <- alpha_vec[df$team2]
+  delta_2 <- delta_vec[df$team2]
+  loc_1 <- case_when(df$team1 == df$location ~ home_field,
+                     df$team2 == df$location ~ 0,
+                     TRUE ~ neutral_field)
+  loc_2 <- case_when(df$team1 == df$location ~ 0,
+                     df$team2 == df$location ~ home_field,
+                     TRUE ~ neutral_field)
+  df$lambda_1 <- ifelse(na_mask, NA_real_, exp(mu + alpha_1 + delta_2 + loc_1))
+  df$lambda_2 <- ifelse(na_mask, NA_real_, exp(mu + alpha_2 + delta_1 + loc_2))
+  df
 }
 
 ### Simulate Group Stage (12 groups A-L, top 2 + best 8 third-place advance)
@@ -141,28 +125,23 @@ resolve_group_ties <- function(standings, results) {
 }
 
 ### Build R32 bracket.
-### Requires data/third_place_combinations.csv (run data/scrape_combinations.R to generate).
+### Requires df_combinations pre-loaded in calling env (data/third_place_combinations.csv).
 build_knockout_bracket <- function(group_stage_results) {
-  get_team <- function(grp, pos) {
-    filter(group_stage_results, group == grp, place == pos) %>% pull(team)
-  }
+  team_map <- setNames(group_stage_results$team,
+                       paste0(group_stage_results$group, group_stage_results$place))
+  get_team <- function(grp, pos) team_map[[paste0(grp, pos)]]
 
-  ### Third-place teams by group
   third_qualifiers <-
     group_stage_results %>%
     filter(progress, place == 3) %>%
     arrange(desc(points), desc(goal_diff), desc(goals_scored))
 
+  third_map <- setNames(third_qualifiers$team, third_qualifiers$group)
   qualifying_groups <- sort(third_qualifiers$group)
   groups_key <- paste(qualifying_groups, collapse = '')
 
-  df_combinations <- read_csv('data/third_place_combinations.csv', show_col_types = F)
   combo <- filter(df_combinations, groups == groups_key)
-
-  get_3rd <- function(slot_col) {
-    grp <- pull(combo, slot_col)
-    filter(third_qualifiers, group == grp) %>% pull(team)
-  }
+  get_3rd <- function(slot_col) third_map[[pull(combo, slot_col)]]
 
   tibble(
     'team1' = c(get_team('A', 1), get_team('B', 1), get_team('A', 2), get_team('F', 1),

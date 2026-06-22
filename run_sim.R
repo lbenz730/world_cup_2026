@@ -10,14 +10,18 @@ n_sims <- 10000
 set.seed(12345)
 run_date <- max(Sys.Date() - (as.integer(format(Sys.time(), '%H')) < 12), as.Date('2026-06-10'))
 
+
 ### Coefficients
 posterior <- read_rds('model_objects/posterior.rds')
 home_field <- mean(posterior$home_field)
 neutral_field <- mean(posterior$neutral_field)
 mu <- mean(posterior$mu)
 
+
 ### Read in ratings and schedule
 df_ratings <- read_csv('predictions/ratings.csv', show_col_types = F)
+alpha_vec <- setNames(df_ratings$alpha, df_ratings$team)
+delta_vec <- setNames(df_ratings$delta, df_ratings$team)
 schedule <-
   read_csv('data/schedule.csv', show_col_types = F) %>%
   mutate('date' = as.Date(date)) %>%
@@ -31,6 +35,15 @@ schedule <-
 
 schedule <- adorn_xg(schedule)
 
+df_combinations <- read_csv('data/third_place_combinations.csv', show_col_types = F)
+
+sched_r32 <- filter(schedule, str_detect(ko_round, 'R32'))
+sched_r16 <- filter(schedule, str_detect(ko_round, 'R16'))
+sched_qf <- filter(schedule, str_detect(ko_round, 'QF'))
+sched_sf <- filter(schedule, str_detect(ko_round, 'SF'))
+sched_final <- filter(schedule, ko_round == 'FINAL')
+sched_3rd <- filter(schedule, ko_round == '3RD')
+
 ### Simulate Group Stage (72 games)
 cat('Simming Group Stage\n')
 df_group_stage <- filter(schedule, !is.na(group))
@@ -40,7 +53,7 @@ if(any(is.na(schedule$team1_score[!is.na(schedule$group)]))) {
   group_stage_results <-
     future_map(dfs_group_stage, sim_group_stage,
                .options = furrr_options(seed = 12921))
-
+  
   ### Build R32 bracket from group stage results
   r32_brackets <-
     future_map(group_stage_results, ~build_knockout_bracket(.x$standings),
@@ -48,15 +61,14 @@ if(any(is.na(schedule$team1_score[!is.na(schedule$group)]))) {
 } else {
   gsr <- sim_group_stage(df_group_stage)
   group_stage_results <- map(1:n_sims, ~gsr)
-  r32_brackets <- future_map(1:n_sims, ~filter(schedule, str_detect(ko_round, 'R32')), .options = furrr_options(seed = 8136))
+  r32_brackets <- future_map(1:n_sims, ~sched_r32, .options = furrr_options(seed = 8136))
 }
 
 ### R32 (16 games)
 cat('Simming R32\n')
 r32_brackets <-
   future_map(r32_brackets, ~{
-    schedule %>%
-      filter(str_detect(ko_round, 'R32')) %>%
+    sched_r32 %>%
       mutate('team1' = ifelse(is.na(.$team1), .x$team1, .$team1),
              'team2' = ifelse(is.na(.$team2), .x$team2, .$team2)) %>%
       select(-lambda_1, -lambda_2) %>%
@@ -65,43 +77,43 @@ r32_brackets <-
 
 r32_results <- future_map(r32_brackets, sim_ko_round, .options = furrr_options(seed = 8138))
 
-### R16 (8 games) — pairs of consecutive R32 winners
+### R16 (8 games) — bracket-correct pairings; order M89,M90,M95,M96,M93,M94,M91,M92
 cat('Simming R16\n')
+r16_t1 <- c(12, 3, 13, 2, 5, 11, 9, 1)
+r16_t2 <- c(8, 4, 14, 15, 6, 7, 10, 16)
+
 r16_brackets <-
   future_map(r32_results, ~{
     winners <- ifelse(.x$team1_score > .x$team2_score, .x$team1, .x$team2)
-    schedule %>%
-      filter(str_detect(ko_round, 'R16')) %>%
-      mutate('team1' = map_chr(1:nrow(.), ~winners[2 * .x - 1]),
-             'team2' = map_chr(1:nrow(.), ~winners[2 * .x])) %>%
+    sched_r16 %>%
+      mutate('team1' = winners[r16_t1],
+             'team2' = winners[r16_t2]) %>%
       select(-lambda_1, -lambda_2) %>%
       adorn_xg(.)
   }, .options = furrr_options(seed = 8139))
 
 r16_results <- future_map(r16_brackets, sim_ko_round, .options = furrr_options(seed = 8140))
 
-### QF (4 games) — pairs of consecutive R16 winners
+### QF (4 games) — consecutive R16 winner pairs give M97,M100,M98,M99 → correct SF halves
 cat('Simming QF\n')
 qf_brackets <-
   future_map(r16_results, ~{
     winners <- ifelse(.x$team1_score > .x$team2_score, .x$team1, .x$team2)
-    schedule %>%
-      filter(str_detect(ko_round, 'QF')) %>%
-      mutate('team1' = map_chr(1:nrow(.), ~winners[2 * .x - 1]),
-             'team2' = map_chr(1:nrow(.), ~winners[2 * .x])) %>%
+    sched_qf %>%
+      mutate('team1' = winners[c(1, 3, 5, 7)],
+             'team2' = winners[c(2, 4, 6, 8)]) %>%
       select(-lambda_1, -lambda_2) %>%
       adorn_xg(.)
   }, .options = furrr_options(seed = 8141))
 
 qf_results <- future_map(qf_brackets, sim_ko_round, .options = furrr_options(seed = 8142))
 
-### SF (2 games) — pairs of consecutive QF winners
+### SF (2 games) — W(QF1) vs W(QF2) = SF M101; W(QF3) vs W(QF4) = SF M102
 cat('Simming SF\n')
 sf_brackets <-
   future_map(qf_results, ~{
     winners <- ifelse(.x$team1_score > .x$team2_score, .x$team1, .x$team2)
-    schedule %>%
-      filter(str_detect(ko_round, 'SF')) %>%
+    sched_sf %>%
       mutate('team1' = winners[c(1, 3)],
              'team2' = winners[c(2, 4)]) %>%
       select(-lambda_1, -lambda_2) %>%
@@ -115,8 +127,7 @@ cat('Simming Final\n')
 final_brackets <-
   future_map(sf_results, ~{
     winners <- ifelse(.x$team1_score > .x$team2_score, .x$team1, .x$team2)
-    schedule %>%
-      filter(ko_round == 'FINAL') %>%
+    sched_final %>%
       mutate('team1' = winners[1],
              'team2' = winners[2]) %>%
       select(-lambda_1, -lambda_2) %>%
@@ -130,8 +141,7 @@ cat('Simming 3rd Place Match\n')
 third_brackets <-
   future_map(sf_results, ~{
     losers <- ifelse(.x$team1_score > .x$team2_score, .x$team2, .x$team1)
-    schedule %>%
-      filter(ko_round == '3RD') %>%
+    sched_3rd %>%
       mutate('team1' = losers[1],
              'team2' = losers[2]) %>%
       select(-lambda_1, -lambda_2) %>%

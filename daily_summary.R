@@ -27,7 +27,7 @@ played_today <-
 if(length(played_today) == 0) {
   message('daily_summary.R: no completed games on ', run_date, ', skipping.')
 } else {
-
+  
   ### Compute deltas vs. the most recent prior date in history
   prior_dates <- dates[dates < run_date]
   if(length(prior_dates) >= 1) {
@@ -44,7 +44,7 @@ if(length(played_today) == 0) {
   } else {
     today <- mutate(today, r32_delta = NA_real_, r16_delta = NA_real_)
   }
-
+  
   
   ### Section 1: teams that played today
   section1 <-
