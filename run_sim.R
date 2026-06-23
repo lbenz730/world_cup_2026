@@ -8,15 +8,17 @@ source('helpers.R')
 
 n_sims <- 10000
 set.seed(12345)
-run_date <- max(Sys.Date() - (as.integer(format(Sys.time(), '%H')) < 12), as.Date('2026-06-10'))
+run_date <- max(Sys.Date() - (as.integer(format(Sys.time(), '%H')) < 12), as.Date('2026-06-10')) 
 
+
+
+run_date <- as.Date(run_date)
 
 ### Coefficients
 posterior <- read_rds('model_objects/posterior.rds')
 home_field <- mean(posterior$home_field)
 neutral_field <- mean(posterior$neutral_field)
 mu <- mean(posterior$mu)
-
 
 ### Read in ratings and schedule
 df_ratings <- read_csv('predictions/ratings.csv', show_col_types = F)
