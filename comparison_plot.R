@@ -118,18 +118,17 @@ sim_results <-
   read_csv('predictions/sim_results.csv', show_col_types = F) %>%
   select(team, current = r32)
 
-pre_wc <-
-  read_csv('predictions/history.csv', show_col_types = F) %>%
-  filter(date == min(date)) %>%
-  select(team, pre_wc = r32)
-
 forecasters_wide <-
   df_raw %>%
-  filter(name %in% c("Silver Bulletin", "Internally Consistent Polymarket")) %>%
+  filter(name %in% c("Silver Bulletin", "Internally Consistent Polymarket", "Respecs730 - v2")) %>%
   mutate(
     team = recode(team, !!!name_fixes),
     adv = 1 - as.numeric(P_R1),
-    name = if_else(name == "Internally Consistent Polymarket", "Polymarket", name)
+    name = case_when(
+      name == "Internally Consistent Polymarket" ~ "Polymarket",
+      name == "Respecs730 - v2" ~ "Recspecs730",
+      TRUE ~ name
+    )
   ) %>%
   select(name, team, adv) %>%
   pivot_wider(names_from = name, values_from = adv)
@@ -151,7 +150,6 @@ fmt_cell <- function(p, outcome) {
 
 tbl <-
   sim_results %>%
-  left_join(pre_wc, by = "team") %>%
   left_join(forecasters_wide, by = "team") %>%
   arrange(desc(current)) %>%
   rowwise() %>%
@@ -159,7 +157,7 @@ tbl <-
     winner = {
       if (current %in% c(0, 1)) {
         ls <- c(
-          Recspecs730 = if (current == 1) log(pre_wc) else log(1 - pre_wc),
+          Recspecs730 = if (current == 1) log(Recspecs730) else log(1 - Recspecs730),
           `Silver Bulletin` = if (current == 1) log(`Silver Bulletin`) else log(1 - `Silver Bulletin`),
           Polymarket = if (current == 1) log(Polymarket) else log(1 - Polymarket)
         )
@@ -169,7 +167,7 @@ tbl <-
         paste(forecaster_emoji[winner_name], winner_name, margin_stars(margin))
       } else NA_character_
     },
-    Recspecs730_fmt = fmt_cell(pre_wc, current),
+    Recspecs730_fmt = fmt_cell(Recspecs730, current),
     Polymarket_fmt = fmt_cell(Polymarket, current),
     SilverBulletin_fmt = fmt_cell(`Silver Bulletin`, current)
   ) %>%
@@ -179,7 +177,7 @@ resolved <- filter(tbl, current %in% c(0, 1))
 log_scores <-
   resolved %>%
   summarise(
-    Recspecs730 = sum(if_else(current == 1, log(pre_wc), log(1 - pre_wc))),
+    Recspecs730 = sum(if_else(current == 1, log(Recspecs730), log(1 - Recspecs730))),
     Polymarket = sum(if_else(current == 1, log(Polymarket), log(1 - Polymarket))),
     SilverBulletin = sum(if_else(current == 1, log(`Silver Bulletin`), log(1 - `Silver Bulletin`)))
   )
@@ -208,7 +206,7 @@ resolved <- filter(tbl, current %in% c(0, 1))
 brier_scores <-
   resolved %>%
   summarise(
-    `👓 Recspecs730` = sum((pre_wc - current)^2),
+    `👓 Recspecs730` = sum((Recspecs730 - current)^2),
     `🔵 Polymarket` = sum((Polymarket - current)^2),
     `🟩 Silver Bulletin` = sum((`Silver Bulletin` - current)^2)
   )

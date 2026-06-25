@@ -16,6 +16,8 @@ neutral_field <- mean(posterior$neutral_field)
 mu <- mean(posterior$mu)
 
 df_ratings <- read_csv('predictions/ratings.csv', show_col_types = F)
+alpha_vec <- setNames(df_ratings$alpha, df_ratings$team)
+delta_vec <- setNames(df_ratings$delta, df_ratings$team)
 schedule <-
   read_csv('data/schedule.csv', show_col_types = F) %>%
   mutate('date' = as.Date(date))

@@ -8,17 +8,14 @@ source('helpers.R')
 
 n_sims <- 10000
 set.seed(12345)
-run_date <- max(Sys.Date() - (as.integer(format(Sys.time(), '%H')) < 12), as.Date('2026-06-10')) 
-
-
-
-run_date <- as.Date(run_date)
+run_date <- max(Sys.Date() - (as.integer(format(Sys.time(), '%H')) < 12), as.Date('2026-06-10')) -1
 
 ### Coefficients
 posterior <- read_rds('model_objects/posterior.rds')
 home_field <- mean(posterior$home_field)
 neutral_field <- mean(posterior$neutral_field)
 mu <- mean(posterior$mu)
+
 
 ### Read in ratings and schedule
 df_ratings <- read_csv('predictions/ratings.csv', show_col_types = F)
@@ -51,9 +48,8 @@ cat('Simming Group Stage\n')
 df_group_stage <- filter(schedule, !is.na(group))
 
 if(any(is.na(schedule$team1_score[!is.na(schedule$group)]))) {
-  dfs_group_stage <- map(1:n_sims, ~df_group_stage)
   group_stage_results <-
-    future_map(dfs_group_stage, sim_group_stage,
+    future_map(1:n_sims, ~sim_group_stage(df_group_stage),
                .options = furrr_options(seed = 12921))
   
   ### Build R32 bracket from group stage results
@@ -110,14 +106,14 @@ qf_brackets <-
 
 qf_results <- future_map(qf_brackets, sim_ko_round, .options = furrr_options(seed = 8142))
 
-### SF (2 games) — W(QF1) vs W(QF2) = SF M101; W(QF3) vs W(QF4) = SF M102
+### SF (2 games) — QF order M97,M100,M98,M99; M101=W(M97)vsW(M98), M102=W(M99)vsW(M100)
 cat('Simming SF\n')
 sf_brackets <-
   future_map(qf_results, ~{
     winners <- ifelse(.x$team1_score > .x$team2_score, .x$team1, .x$team2)
     sched_sf %>%
-      mutate('team1' = winners[c(1, 3)],
-             'team2' = winners[c(2, 4)]) %>%
+      mutate('team1' = winners[c(1, 2)],
+             'team2' = winners[c(3, 4)]) %>%
       select(-lambda_1, -lambda_2) %>%
       adorn_xg(.)
   }, .options = furrr_options(seed = 8143))
@@ -219,3 +215,4 @@ write_rds(qf_results, 'predictions/sim_rds/qf_results.rds')
 write_rds(sf_results, 'predictions/sim_rds/sf_results.rds')
 write_rds(finals_results, 'predictions/sim_rds/finals_results.rds')
 write_rds(third_results, 'predictions/sim_rds/third_results.rds')
+

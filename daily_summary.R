@@ -8,6 +8,7 @@ run_date <- max(Sys.Date() - (as.integer(format(Sys.time(), '%H')) < 12), as.Dat
 dir.create('figures/daily_summary', showWarnings = FALSE)
 
 
+run_date <- as.Date(run_date)
 
 history <-
   read_csv('predictions/history.csv', show_col_types = F) %>%
