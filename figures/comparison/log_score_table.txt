@@ -1,6 +1,7 @@
 |Team                   |Current (👓 Recspecs730) |Pre-WC (👓 Recspecs730) |🔵 Polymarket  |🟩 Silver Bulletin |Winner                  |
 |:----------------------|:------------------------|:-----------------------|:--------------|:------------------|:-----------------------|
 |Argentina              |100.0%                   |97.9% (-0.021)          |96.5% (-0.035) |99.0% (-0.010)     |🟩 Silver Bulletin ⭐   |
+|Australia              |100.0%                   |72.0% (-0.329)          |47.7% (-0.739) |39.5% (-0.928)     |👓 Recspecs730 ⭐⭐⭐   |
 |Bosnia and Herzegovina |100.0%                   |47.7% (-0.741)          |65.8% (-0.418) |68.1% (-0.384)     |🟩 Silver Bulletin ⭐   |
 |Brazil                 |100.0%                   |99.1% (-0.009)          |98.0% (-0.020) |96.9% (-0.031)     |👓 Recspecs730 ⭐       |
 |Canada                 |100.0%                   |94.2% (-0.060)          |85.9% (-0.152) |94.9% (-0.052)     |🟩 Silver Bulletin ⭐   |
@@ -23,23 +24,22 @@
 |Switzerland            |100.0%                   |93.8% (-0.064)          |94.3% (-0.058) |95.3% (-0.048)     |🟩 Silver Bulletin ⭐   |
 |United States          |100.0%                   |82.9% (-0.187)          |83.9% (-0.175) |79.9% (-0.224)     |🔵 Polymarket ⭐        |
 |Ghana                  |100.0%                   |38.8%                   |48.8%          |24.2%              |                        |
-|Croatia                |94.0%                    |90.0%                   |81.9%          |86.5%              |                        |
-|Belgium                |92.7%                    |94.3%                   |96.2%          |96.2%              |                        |
-|Australia              |89.4%                    |72.0%                   |47.7%          |39.5%              |                        |
-|Austria                |88.2%                    |68.3%                   |80.9%          |76.2%              |                        |
-|South Korea            |80.2%                    |73.9%                   |69.9%          |66.6%              |                        |
-|Iran                   |71.1%                    |80.2%                   |62.2%          |65.7%              |                        |
-|Algeria                |71.0%                    |70.1%                   |65.8%          |64.0%              |                        |
-|Paraguay               |69.5%                    |60.6%                   |64.8%          |67.7%              |                        |
-|Cape Verde             |59.7%                    |21.6%                   |30.7%          |29.1%              |                        |
-|Uruguay                |44.1%                    |91.1%                   |86.9%          |92.8%              |                        |
-|Senegal                |42.6%                    |75.0%                   |71.4%          |74.6%              |                        |
-|Saudi Arabia           |39.9%                    |42.1%                   |36.7%          |31.1%              |                        |
-|DR Congo               |36.4%                    |36.6%                   |42.7%          |39.8%              |                        |
-|Scotland               |13.0%                    |59.7%                   |68.8%          |71.9%              |                        |
-|New Zealand            |7.1%                     |26.4%                   |31.7%          |30.9%              |                        |
-|Iraq                   |0.7%                     |29.0%                   |14.6%          |12.0%              |                        |
-|Uzbekistan             |0.5%                     |42.2%                   |33.7%          |34.0%              |                        |
+|Paraguay               |99.8%                    |60.6%                   |64.8%          |67.7%              |                        |
+|Belgium                |92.6%                    |94.3%                   |96.2%          |96.2%              |                        |
+|Croatia                |91.5%                    |90.0%                   |81.9%          |86.5%              |                        |
+|Austria                |83.6%                    |68.3%                   |80.9%          |76.2%              |                        |
+|Iran                   |69.4%                    |80.2%                   |62.2%          |65.7%              |                        |
+|Algeria                |68.1%                    |70.1%                   |65.8%          |64.0%              |                        |
+|South Korea            |63.4%                    |73.9%                   |69.9%          |66.6%              |                        |
+|Cape Verde             |58.8%                    |21.6%                   |30.7%          |29.1%              |                        |
+|Uruguay                |44.8%                    |91.1%                   |86.9%          |92.8%              |                        |
+|Saudi Arabia           |40.2%                    |42.1%                   |36.7%          |31.1%              |                        |
+|DR Congo               |36.8%                    |36.6%                   |42.7%          |39.8%              |                        |
+|Senegal                |34.7%                    |75.0%                   |71.4%          |74.6%              |                        |
+|Scotland               |8.9%                     |59.7%                   |68.8%          |71.9%              |                        |
+|New Zealand            |6.9%                     |26.4%                   |31.7%          |30.9%              |                        |
+|Iraq                   |0.3%                     |29.0%                   |14.6%          |12.0%              |                        |
+|Uzbekistan             |0.2%                     |42.2%                   |33.7%          |34.0%              |                        |
 |Curaçao                |0.0%                     |16.4% (-0.179)          |7.5% (-0.078)  |11.4% (-0.121)     |🔵 Polymarket ⭐        |
 |Czechia                |0.0%                     |65.4% (-1.061)          |69.9% (-1.199) |65.5% (-1.063)     |👓 Recspecs730 ⭐       |
 |Haiti                  |0.0%                     |15.3% (-0.166)          |12.6% (-0.134) |22.0% (-0.248)     |🔵 Polymarket ⭐        |
@@ -49,7 +49,7 @@
 |Tunisia                |0.0%                     |49.6% (-0.685)          |38.7% (-0.489) |28.1% (-0.331)     |🟩 Silver Bulletin ⭐⭐ |
 |Turkiye                |0.0%                     |59.3% (-0.898)          |79.9% (-1.605) |85.6% (-1.937)     |👓 Recspecs730 ⭐⭐⭐   |
 |                       |                         |                        |               |                   |                        |
-|**Log Score**          |                         |-8.747                  |-8.327         |-8.673             |                        |
+|**Log Score**          |                         |-9.075                  |-9.067         |-9.602             |                        |
 
 _**Log score:** For each clinched/eliminated team, each forecaster earns_
 _log(p) if the team advanced or log(1 - p) if the team was eliminated,_
@@ -62,9 +62,9 @@ _**Winner margin key:** ⭐ < 0.05 log score margin | ⭐⭐ 0.05–0.25 | ⭐�
 
 |Forecaster         |Brier Score |
 |:------------------|:-----------|
-|🔵 Polymarket      |2.447       |
-|👓 Recspecs730     |2.609       |
-|🟩 Silver Bulletin |2.624       |
+|👓 Recspecs730     |2.687       |
+|🔵 Polymarket      |2.720       |
+|🟩 Silver Bulletin |2.990       |
 
 _**Brier score:** For each clinched/eliminated team, each forecaster is penalized (p - outcome)²,_
 _where p is the advancement probability and outcome is 1 if advanced, 0 if eliminated._
