@@ -45,14 +45,14 @@ date,team1,team2,location,group,ko_round,team1_score,team2_score,shootout_winner
 2026-06-15,Saudi Arabia,Uruguay,United States,H,NA,1,1,NA
 2026-06-21,Spain,Saudi Arabia,United States,H,NA,4,0,NA
 2026-06-21,Uruguay,Cape Verde,United States,H,NA,2,2,NA
-2026-06-26,Cape Verde,Saudi Arabia,United States,H,NA,NA,NA,NA
-2026-06-26,Uruguay,Spain,Mexico,H,NA,NA,NA,NA
+2026-06-26,Cape Verde,Saudi Arabia,United States,H,NA,0,0,NA
+2026-06-26,Uruguay,Spain,Mexico,H,NA,0,1,NA
 2026-06-16,France,Senegal,United States,I,NA,3,1,NA
 2026-06-16,Iraq,Norway,United States,I,NA,1,4,NA
 2026-06-22,France,Iraq,United States,I,NA,3,0,NA
 2026-06-22,Norway,Senegal,United States,I,NA,3,2,NA
-2026-06-26,Norway,France,United States,I,NA,NA,NA,NA
-2026-06-26,Senegal,Iraq,Canada,I,NA,NA,NA,NA
+2026-06-26,Norway,France,United States,I,NA,1,4,NA
+2026-06-26,Senegal,Iraq,Canada,I,NA,5,0,NA
 2026-06-16,Argentina,Algeria,United States,J,NA,3,0,NA
 2026-06-17,Austria,Jordan,United States,J,NA,3,1,NA
 2026-06-22,Argentina,Austria,United States,J,NA,2,0,NA

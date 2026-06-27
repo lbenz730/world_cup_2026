@@ -5,51 +5,51 @@
 |Bosnia and Herzegovina |100.0%                   |47.7% (-0.741)          |65.8% (-0.418) |68.1% (-0.384)     |🟩 Silver Bulletin ⭐   |
 |Brazil                 |100.0%                   |99.1% (-0.009)          |98.0% (-0.020) |96.9% (-0.031)     |👓 Recspecs730 ⭐       |
 |Canada                 |100.0%                   |94.2% (-0.060)          |85.9% (-0.152) |94.9% (-0.052)     |🟩 Silver Bulletin ⭐   |
+|Cape Verde             |100.0%                   |21.6% (-1.534)          |30.7% (-1.182) |29.1% (-1.233)     |🔵 Polymarket ⭐⭐      |
 |Colombia               |100.0%                   |89.6% (-0.110)          |90.0% (-0.106) |94.1% (-0.061)     |🟩 Silver Bulletin ⭐   |
 |Ecuador                |100.0%                   |88.5% (-0.122)          |88.9% (-0.117) |92.7% (-0.075)     |🟩 Silver Bulletin ⭐   |
 |Egypt                  |100.0%                   |66.7% (-0.406)          |72.9% (-0.316) |74.6% (-0.294)     |🟩 Silver Bulletin ⭐   |
 |England                |100.0%                   |97.3% (-0.027)          |96.5% (-0.035) |98.2% (-0.018)     |🟩 Silver Bulletin ⭐   |
 |France                 |100.0%                   |93.7% (-0.065)          |97.7% (-0.024) |95.9% (-0.042)     |🔵 Polymarket ⭐        |
 |Germany                |100.0%                   |96.0% (-0.041)          |96.7% (-0.034) |97.9% (-0.022)     |🟩 Silver Bulletin ⭐   |
+|Ghana                  |100.0%                   |38.8% (-0.946)          |48.8% (-0.718) |24.2% (-1.418)     |🔵 Polymarket ⭐⭐      |
 |Ivory Coast            |100.0%                   |70.7% (-0.347)          |80.4% (-0.218) |67.1% (-0.399)     |🔵 Polymarket ⭐⭐      |
 |Japan                  |100.0%                   |79.2% (-0.233)          |78.9% (-0.237) |85.0% (-0.163)     |🟩 Silver Bulletin ⭐⭐ |
 |Mexico                 |100.0%                   |92.2% (-0.081)          |93.0% (-0.073) |97.2% (-0.028)     |🟩 Silver Bulletin ⭐   |
 |Morocco                |100.0%                   |90.8% (-0.096)          |86.9% (-0.140) |79.0% (-0.235)     |👓 Recspecs730 ⭐       |
 |Netherlands            |100.0%                   |86.7% (-0.143)          |90.0% (-0.106) |93.4% (-0.068)     |🟩 Silver Bulletin ⭐   |
 |Norway                 |100.0%                   |71.2% (-0.339)          |85.9% (-0.152) |90.6% (-0.099)     |🟩 Silver Bulletin ⭐⭐ |
+|Paraguay               |100.0%                   |60.6% (-0.500)          |64.8% (-0.433) |67.7% (-0.391)     |🟩 Silver Bulletin ⭐   |
 |Portugal               |100.0%                   |93.9% (-0.063)          |96.7% (-0.034) |95.1% (-0.050)     |🔵 Polymarket ⭐        |
 |South Africa           |100.0%                   |40.3% (-0.908)          |38.2% (-0.962) |36.6% (-1.005)     |👓 Recspecs730 ⭐⭐     |
 |Spain                  |100.0%                   |99.0% (-0.010)          |99.0% (-0.010) |99.2% (-0.008)     |🟩 Silver Bulletin ⭐   |
 |Sweden                 |100.0%                   |57.0% (-0.561)          |61.8% (-0.481) |62.8% (-0.465)     |🟩 Silver Bulletin ⭐   |
 |Switzerland            |100.0%                   |93.8% (-0.064)          |94.3% (-0.058) |95.3% (-0.048)     |🟩 Silver Bulletin ⭐   |
 |United States          |100.0%                   |82.9% (-0.187)          |83.9% (-0.175) |79.9% (-0.224)     |🔵 Polymarket ⭐        |
-|Ghana                  |100.0%                   |38.8%                   |48.8%          |24.2%              |                        |
-|Paraguay               |99.8%                    |60.6%                   |64.8%          |67.7%              |                        |
+|Senegal                |97.1%                    |75.0%                   |71.4%          |74.6%              |                        |
 |Belgium                |92.6%                    |94.3%                   |96.2%          |96.2%              |                        |
-|Croatia                |91.5%                    |90.0%                   |81.9%          |86.5%              |                        |
-|Austria                |83.6%                    |68.3%                   |80.9%          |76.2%              |                        |
-|Iran                   |69.4%                    |80.2%                   |62.2%          |65.7%              |                        |
-|Algeria                |68.1%                    |70.1%                   |65.8%          |64.0%              |                        |
-|South Korea            |63.4%                    |73.9%                   |69.9%          |66.6%              |                        |
-|Cape Verde             |58.8%                    |21.6%                   |30.7%          |29.1%              |                        |
-|Uruguay                |44.8%                    |91.1%                   |86.9%          |92.8%              |                        |
-|Saudi Arabia           |40.2%                    |42.1%                   |36.7%          |31.1%              |                        |
-|DR Congo               |36.8%                    |36.6%                   |42.7%          |39.8%              |                        |
-|Senegal                |34.7%                    |75.0%                   |71.4%          |74.6%              |                        |
-|Scotland               |8.9%                     |59.7%                   |68.8%          |71.9%              |                        |
+|Croatia                |91.1%                    |90.0%                   |81.9%          |86.5%              |                        |
+|Austria                |81.3%                    |68.3%                   |80.9%          |76.2%              |                        |
+|Iran                   |68.1%                    |80.2%                   |62.2%          |65.7%              |                        |
+|Algeria                |67.3%                    |70.1%                   |65.8%          |64.0%              |                        |
+|South Korea            |55.6%                    |73.9%                   |69.9%          |66.6%              |                        |
+|DR Congo               |36.3%                    |36.6%                   |42.7%          |39.8%              |                        |
 |New Zealand            |6.9%                     |26.4%                   |31.7%          |30.9%              |                        |
-|Iraq                   |0.3%                     |29.0%                   |14.6%          |12.0%              |                        |
-|Uzbekistan             |0.2%                     |42.2%                   |33.7%          |34.0%              |                        |
+|Scotland               |3.7%                     |59.7%                   |68.8%          |71.9%              |                        |
+|Uzbekistan             |0.1%                     |42.2%                   |33.7%          |34.0%              |                        |
 |Curaçao                |0.0%                     |16.4% (-0.179)          |7.5% (-0.078)  |11.4% (-0.121)     |🔵 Polymarket ⭐        |
 |Czechia                |0.0%                     |65.4% (-1.061)          |69.9% (-1.199) |65.5% (-1.063)     |👓 Recspecs730 ⭐       |
 |Haiti                  |0.0%                     |15.3% (-0.166)          |12.6% (-0.134) |22.0% (-0.248)     |🔵 Polymarket ⭐        |
+|Iraq                   |0.0%                     |29.0% (-0.343)          |14.6% (-0.157) |12.0% (-0.128)     |🟩 Silver Bulletin ⭐   |
 |Jordan                 |0.0%                     |29.4% (-0.348)          |19.6% (-0.218) |23.6% (-0.269)     |🔵 Polymarket ⭐⭐      |
 |Panama                 |0.0%                     |33.5% (-0.408)          |36.7% (-0.457) |54.2% (-0.782)     |👓 Recspecs730 ⭐       |
 |Qatar                  |0.0%                     |30.6% (-0.365)          |21.6% (-0.243) |13.2% (-0.141)     |🟩 Silver Bulletin ⭐⭐ |
+|Saudi Arabia           |0.0%                     |42.1% (-0.547)          |36.7% (-0.457) |31.1% (-0.373)     |🟩 Silver Bulletin ⭐⭐ |
 |Tunisia                |0.0%                     |49.6% (-0.685)          |38.7% (-0.489) |28.1% (-0.331)     |🟩 Silver Bulletin ⭐⭐ |
 |Turkiye                |0.0%                     |59.3% (-0.898)          |79.9% (-1.605) |85.6% (-1.937)     |👓 Recspecs730 ⭐⭐⭐   |
+|Uruguay                |0.0%                     |91.1% (-2.425)          |86.9% (-2.036) |92.8% (-2.627)     |🔵 Polymarket ⭐⭐⭐    |
 |                       |                         |                        |               |                   |                        |
-|**Log Score**          |                         |-9.075                  |-9.067         |-9.602             |                        |
+|**Log Score**          |                         |-15.370                 |-14.051        |-15.772            |                        |
 
 _**Log score:** For each clinched/eliminated team, each forecaster earns_
 _log(p) if the team advanced or log(1 - p) if the team was eliminated,_
@@ -62,9 +62,9 @@ _**Winner margin key:** ⭐ < 0.05 log score margin | ⭐⭐ 0.05–0.25 | ⭐�
 
 |Forecaster         |Brier Score |
 |:------------------|:-----------|
-|👓 Recspecs730     |2.687       |
-|🔵 Polymarket      |2.720       |
-|🟩 Silver Bulletin |2.990       |
+|🔵 Polymarket      |4.499       |
+|👓 Recspecs730     |4.924       |
+|🟩 Silver Bulletin |5.143       |
 
 _**Brier score:** For each clinched/eliminated team, each forecaster is penalized (p - outcome)²,_
 _where p is the advancement probability and outcome is 1 if advanced, 0 if eliminated._
