@@ -14,13 +14,17 @@ df_raw <- read_sheet(ss_url, sheet = sheet_name, col_types = 'c')
 # Sheet uses Czech Republic / Turkey; schedule uses Czechia / Turkiye
 sheet_to_sched <- c('Czech Republic' = 'Czechia', 'Turkey' = 'Turkiye')
 
+all_prob_cols <- c("P_R1", "P_R32", "P_R16", "P_QF", "P_SF", "P_LF", "P_WF")
+round_to_col <- c(R1 = "P_R1", R32 = "P_R32", R16 = "P_R16",
+                  QF = "P_QF", SF = "P_SF", LF = "P_LF", WF = "P_WF")
+
 forecaster_probs <-
   df_raw %>%
-  mutate(adv_prob = 1 - as.numeric(P_R1),
+  mutate(across(all_of(all_prob_cols), as.numeric),
          team = recode(team, !!!sheet_to_sched)) %>%
-  select(name, team, adv_prob)
+  select(name, team, all_of(all_prob_cols))
 
-### ── Compute current group standings from schedule.csv ──────────────────────
+### ── Compute team elimination rounds from schedule.csv ──────────────────────
 schedule <- read_csv('data/schedule.csv', show_col_types = FALSE)
 
 game_results <-
@@ -41,7 +45,6 @@ standings <-
   mutate(place = row_number()) %>%
   ungroup()
 
-# Best 8 of 12 third-place teams advance
 third_place_advancing <-
   standings %>%
   filter(place == 3) %>%
@@ -49,35 +52,94 @@ third_place_advancing <-
   slice_head(n = 8) %>%
   pull(team)
 
-d_r1 <-
+gs_eliminated <-
   standings %>%
   mutate(d_r1 = case_when(place <= 2 ~ 0L,
-                          place == 3 & team %in% third_place_advancing ~ 0L,
-                          TRUE ~ 1L)) %>%
-  select(team, d_r1)
+                           place == 3 & team %in% third_place_advancing ~ 0L,
+                           TRUE ~ 1L)) %>%
+  filter(d_r1 == 1L) %>%
+  select(team) %>%
+  mutate(outcome_round = "R1")
 
-n_advancing <- sum(d_r1$d_r1 == 0)
-n_eliminated <- sum(d_r1$d_r1 == 1)
+ko_done <- filter(schedule, !is.na(ko_round), !is.na(team1_score))
+
+ko_outcomes <- tibble(team = character(), outcome_round = character())
+if(nrow(ko_done) > 0) {
+  ko_with_result <-
+    ko_done %>%
+    mutate(
+      round_prefix = str_extract(ko_round, "^[A-Za-z0-9]+"),
+      loser = case_when(
+        team1_score > team2_score ~ team2,
+        team2_score > team1_score ~ team1,
+        shootout_winner == team1 ~ team2,
+        shootout_winner == team2 ~ team1
+      ),
+      winner = case_when(
+        team1_score > team2_score ~ team1,
+        team2_score > team1_score ~ team2,
+        shootout_winner == team1 ~ team1,
+        shootout_winner == team2 ~ team2
+      )
+    )
+
+  ko_main <-
+    ko_with_result %>%
+    filter(round_prefix %in% c("R32", "R16", "QF", "SF")) %>%
+    select(outcome_round = round_prefix, team = loser) %>%
+    filter(!is.na(team))
+
+  finals_rows <- filter(ko_with_result, round_prefix == "Finals")
+  finals_outcomes <-
+    if(nrow(finals_rows) > 0) {
+      bind_rows(
+        finals_rows %>% select(team = loser) %>% mutate(outcome_round = "LF"),
+        finals_rows %>% select(team = winner) %>% mutate(outcome_round = "WF")
+      ) %>%
+      filter(!is.na(team))
+    } else {
+      tibble(team = character(), outcome_round = character())
+    }
+
+  ko_outcomes <- bind_rows(ko_main, finals_outcomes)
+}
+
+team_outcomes <- bind_rows(gs_eliminated, ko_outcomes)
+
+n_resolved <- nrow(team_outcomes)
+n_still_alive <- 48 - n_resolved
 
 ### ── Compute scores ─────────────────────────────────────────────────────────
 scores <-
   forecaster_probs %>%
-  inner_join(d_r1, by = 'team') %>%
-  mutate(outcome_adv = 1L - d_r1,
-         log_i = if_else(d_r1 == 1L, log(1 - adv_prob), log(adv_prob)),
-         brier_i = 2 * (adv_prob - outcome_adv)^2) %>%
+  inner_join(select(team_outcomes, team, outcome_round), by = 'team') %>%
+  pivot_longer(all_of(all_prob_cols), names_to = "prob_col", values_to = "prob_used") %>%
+  filter(prob_col == round_to_col[outcome_round]) %>%
+  mutate(log_i = log(prob_used)) %>%
   group_by(name) %>%
-  summarise(log_score = sum(log_i),
-            brier = sum(brier_i),
-            .groups = 'drop') %>%
+  summarise(log_score = sum(log_i), .groups = 'drop') %>%
   arrange(desc(log_score)) %>%
   mutate(rank = row_number())
+
+brier <-
+  forecaster_probs %>%
+  inner_join(select(team_outcomes, team, outcome_round), by = 'team') %>%
+  pivot_longer(all_of(all_prob_cols), names_to = "prob_col", values_to = "p") %>%
+  mutate(actual_col = round_to_col[outcome_round],
+         ind = as.integer(prob_col == actual_col),
+         sq_err = (p - ind)^2) %>%
+  group_by(name) %>%
+  summarise(brier = sum(sq_err), .groups = 'drop')
+
+scores_tbl <-
+  scores %>%
+  left_join(brier, by = 'name')
 
 ### ── Build gt table ─────────────────────────────────────────────────────────
 user_entry <- 'Respecs730 - v2'
 
 tbl <-
-  scores %>%
+  scores_tbl %>%
   select(rank, name, log_score, brier) %>%
   gt() %>%
   cols_label(rank = 'Rank',
@@ -87,8 +149,7 @@ tbl <-
   fmt_number(columns = c(log_score, brier), decimals = 3) %>%
   tab_header(title = md('**FIFA World Cup 2026 — Group Stage Forecasting Contest**'),
              subtitle = md(glue::glue(
-               'Current group standings &nbsp;·&nbsp; ',
-               '{n_advancing} advancing / {n_eliminated} eliminated (48 teams total)'
+               '{n_resolved} of 48 teams resolved &nbsp;·&nbsp; {n_still_alive} still competing'
              ))) %>%
   tab_style(style = list(cell_fill(color = '#E63946', alpha = 0.20),
                          cell_text(weight = 'bold')),
@@ -96,9 +157,9 @@ tbl <-
   tab_style(style = cell_text(color = 'grey50'),
             locations = cells_body(columns = rank)) %>%
   tab_footnote(footnote = md(paste0(
-    'Log score (higher is better): Σ log(p) if advanced + Σ log(1−p) if eliminated. ',
-    'Brier (lower is better): Σ 2(p − outcome)². ',
-    'p = pre-tournament probability of advancing from the group stage. ',
+    'Log score (higher is better): Σ log(p) where p is the pre-tournament marginal probability ',
+    'of the team\'s actual elimination round (GS/R32/R16/QF/SF/LF/WF). ',
+    'Brier (lower is better): Σ (p_j − I_j)² across all 7 outcome categories per resolved team. ',
     '3rd-place tiebreaker: points → goal difference → goals scored.')),
     locations = cells_column_labels(columns = log_score)) %>%
   cols_width(rank ~ px(55),

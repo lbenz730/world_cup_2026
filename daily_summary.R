@@ -36,19 +36,20 @@ if(length(played_today) == 0) {
   if(length(prior_dates) >= 1) {
     yesterday <-
       filter(history, date == max(prior_dates)) %>%
-      select(team, r32_prev = r32, r16_prev = r16)
+      select(team, r16_prev = r16, qf_prev = qf, sf_prev = sf)
     today <-
       today %>%
       left_join(yesterday, by = 'team') %>%
       mutate(
-        r32_delta = r32 - r32_prev,
-        r16_delta = r16 - r16_prev
+        r16_delta = r16 - r16_prev,
+        qf_delta = qf - qf_prev,
+        sf_delta = sf - sf_prev
       )
   } else {
-    today <- mutate(today, r32_delta = NA_real_, r16_delta = NA_real_)
+    today <- mutate(today, r16_delta = NA_real_, qf_delta = NA_real_, sf_delta = NA_real_)
   }
-  
-  
+
+
   ### Section 1: teams that played today
   section1 <-
     today %>%
@@ -56,16 +57,16 @@ if(length(played_today) == 0) {
     arrange(group, team) %>%
     mutate('logo' = file.path(getwd(), paste0('flags/', team, '.png')),
            'section' = 'Teams That Played') %>%
-    select(section, logo, team, group, r32, r32_delta, r16, r16_delta)
-  
-  ### Section 2: significant movers who didn't play (|r32 delta| >= 5%)
+    select(section, logo, team, group, r16, r16_delta, qf, qf_delta, sf, sf_delta)
+
+  ### Section 2: significant movers who didn't play (|r16 delta| >= 5%)
   section2 <-
     today %>%
-    filter(!team %in% played_today, abs(r32_delta) >= 0.05 | abs(r16_delta) >= 0.05) %>%
-    arrange(desc(abs(r32_delta))) %>%
+    filter(!team %in% played_today, abs(r16_delta) >= 0.05 | abs(qf_delta) >= 0.05 | abs(sf_delta) >= 0.05) %>%
+    arrange(desc(abs(r16_delta))) %>%
     mutate('logo' = file.path(getwd(), paste0('flags/', team, '.png')),
            'section' = 'Significant Movers (Did Not Play)') %>%
-    select(section, logo, team, group, r32, r32_delta, r16, r16_delta)
+    select(section, logo, team, group, r16, r16_delta, qf, qf_delta, sf, sf_delta)
   
   df_table <-
     if(nrow(section2) > 0) {
@@ -95,26 +96,32 @@ if(length(played_today) == 0) {
       locations = cells_body(columns = logo),
       fn = function(x) map_chr(x, ~local_image(filename = as.character(.x), height = 25))
     ) %>%
-    fmt_percent(columns = c(r32, r16), decimals = 1) %>%
-    fmt(columns = c(r32_delta, r16_delta), fns = fmt_delta) %>%
+    fmt_percent(columns = c(r16, qf, sf), decimals = 1) %>%
+    fmt(columns = c(r16_delta, qf_delta, sf_delta), fns = fmt_delta) %>%
     data_color(
-      columns = c(r32, r16),
+      columns = c(r16, qf, sf),
       fn = scales::col_numeric(palette = ggsci::rgb_material('amber', n = 100), domain = c(0, 1))
     ) %>%
-    tab_spanner(label = 'R32 Chances', columns = c(r32, r32_delta)) %>%
     tab_spanner(label = 'R16 Chances', columns = c(r16, r16_delta)) %>%
+    tab_spanner(label = 'QF Chances', columns = c(qf, qf_delta)) %>%
+    tab_spanner(label = 'SF Chances', columns = c(sf, sf_delta)) %>%
     tab_style(
       style = cell_borders(sides = 'bottom', color = 'black', weight = px(3)),
       locations = cells_column_labels(columns = everything())
     ) %>%
     tab_style(
       style = cell_borders(sides = 'right', color = 'black', weight = px(3)),
-      locations = cells_body(columns = r32_delta)
+      locations = cells_body(columns = r16_delta)
+    ) %>%
+    tab_style(
+      style = cell_borders(sides = 'right', color = 'black', weight = px(3)),
+      locations = cells_body(columns = qf_delta)
     ) %>%
     cols_label(
       logo = '', team = 'Team', group = 'Group',
-      r32 = 'Current', r32_delta = 'Change',
-      r16 = 'Current', r16_delta = 'Change'
+      r16 = 'Current', r16_delta = 'Change',
+      qf = 'Current', qf_delta = 'Change',
+      sf = 'Current', sf_delta = 'Change'
     ) %>%
     tab_header(
       title = md('**FIFA World Cup 2026**'),

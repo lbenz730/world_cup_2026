@@ -11,6 +11,18 @@ df_stats <-
   select(team, logo, group, alpha, delta, net_rating, mean_pts, mean_gd,
          r32, r16, qf, sf, finals, champ)
 
+schedule_raw <- read_csv('data/schedule.csv', show_col_types = F)
+
+ko_losers <-
+  schedule_raw %>%
+  filter(!is.na(ko_round), !is.na(team1_score)) %>%
+  mutate(loser = ifelse(
+    !is.na(shootout_winner),
+    ifelse(shootout_winner == team1, team2, team1),
+    ifelse(as.numeric(team1_score) > as.numeric(team2_score), team2, team1)
+  )) %>%
+  pull(loser)
+
 make_table <- function(Group = 'all') {
   title <- html(paste0("<img src='", file.path(getwd(), 'flags/fifa_logo.jpg'), "' height='160'>"))
 
@@ -122,6 +134,90 @@ make_table <- function(Group = 'all') {
         heading.subtitle.font.weight = 'bold',
         column_labels.font.weight = 'bold'
       )
+  } else if(Group == 'remaining') {
+    df_stats %>%
+      filter(r32 == 1, !team %in% ko_losers) %>%
+      arrange(desc(champ)) %>%
+      gt() %>%
+
+      fmt_number(columns = c(alpha, delta, net_rating, mean_pts, mean_gd), decimals = 2, sep_mark = '') %>%
+      fmt_percent(columns = c(r32, r16, qf, sf, finals, champ), decimals = 0, sep_mark = '') %>%
+
+      cols_align(align = "center") %>%
+
+      data_color(columns = c(mean_pts),
+                 fn = scales::col_numeric(palette = ggsci::rgb_material('amber', n = 100), domain = c(0, 9))) %>%
+      data_color(columns = c(mean_gd),
+                 fn = scales::col_numeric(palette = ggsci::rgb_material('amber', n = 100), domain = range(df_stats$mean_gd))) %>%
+      data_color(columns = c(r32, r16, qf, sf, finals, champ),
+                 fn = scales::col_numeric(palette = ggsci::rgb_material('amber', n = 100), domain = c(0, 1))) %>%
+      data_color(columns = c(alpha),
+                 fn = scales::col_numeric(palette = ggsci::rgb_material('amber', n = 100), domain = range(df_stats$alpha))) %>%
+      data_color(columns = c(net_rating),
+                 fn = scales::col_numeric(palette = ggsci::rgb_material('amber', n = 100), domain = range(df_stats$net_rating))) %>%
+      data_color(columns = c(delta),
+                 fn = scales::col_numeric(palette = ggsci::rgb_material('amber', n = 100), domain = range(df_stats$delta), reverse = T)) %>%
+
+      tab_style(
+        style = list(
+          cell_borders(sides = "bottom", color = "black", weight = px(3))
+        ),
+        locations = list(
+          cells_column_labels(columns = gt::everything())
+        )
+      ) %>%
+      tab_style(
+        style = list(
+          cell_borders(sides = "right", color = "black", weight = px(3))
+        ),
+        locations = list(
+          cells_body(columns = c(net_rating, mean_gd))
+        )
+      ) %>%
+      tab_style(
+        style = list(
+          cell_borders(sides = "left", color = "black", weight = px(3))
+        ),
+        locations = list(
+          cells_body(columns = c(alpha))
+        )
+      ) %>%
+
+      tab_spanner(label = 'Ratings', columns = c('alpha', 'delta', 'net_rating')) %>%
+      tab_spanner(label = 'Group Stage', columns = c('mean_pts', 'mean_gd')) %>%
+      tab_spanner(label = 'Knockout Round', columns = c('r32', 'r16', 'qf', 'sf', 'finals', 'champ')) %>%
+
+      text_transform(
+        locations = cells_body(columns = "logo"),
+        fn = function(x) map_chr(x, ~{
+          local_image(filename = as.character(.x), height = 30)
+        })
+      ) %>%
+
+      cols_label(
+        team = '', logo = '', group = 'Group',
+        alpha = 'Offense', delta = 'Defense', net_rating = 'Overall',
+        mean_pts = 'Points', mean_gd = 'GD',
+        r32 = 'R32', r16 = 'R16', qf = 'QF', sf = 'SF', finals = 'Finals', champ = 'Champ'
+      ) %>%
+      tab_source_note("Luke Benz (@recspecs730)") %>%
+      tab_source_note("Ratings = Change in Log Goal Expectations") %>%
+      tab_source_note("Based on 10,000 Simulations") %>%
+      tab_source_note("Data: github.com/martj42/international_results | Country Images: Flaticon.com") %>%
+      tab_header(
+        title = title,
+        subtitle = md('**World Cup 2026: Teams Still in Contention**')
+      ) %>%
+      tab_options(
+        column_labels.font.size = 20,
+        row_group.font.weight = 'bold',
+        row_group.font.size = 20,
+        heading.title.font.size = 40,
+        heading.subtitle.font.size = 30,
+        heading.title.font.weight = 'bold',
+        heading.subtitle.font.weight = 'bold',
+        column_labels.font.weight = 'bold'
+      )
   } else {
     df_stats %>%
       filter(group == Group) %>%
@@ -209,4 +305,5 @@ make_table <- function(Group = 'all') {
 }
 
 gtExtras::gtsave_extra(make_table('all'), filename = 'figures/simulation_tables/world_cup_2026.png', vwidth = 2000)
+gtExtras::gtsave_extra(make_table('remaining'), filename = 'figures/simulation_tables/remaining.png', vwidth = 2000)
 map(LETTERS[1:12], ~gtExtras::gtsave_extra(make_table(Group = .x), filename = paste0('figures/simulation_tables/', .x, '.png')))

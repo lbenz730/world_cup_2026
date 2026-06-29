@@ -59,7 +59,8 @@ if(any(is.na(schedule$team1_score[!is.na(schedule$group)]))) {
 } else {
   gsr <- sim_group_stage(df_group_stage)
   group_stage_results <- map(1:n_sims, ~gsr)
-  r32_brackets <- future_map(1:n_sims, ~sched_r32, .options = furrr_options(seed = 8136))
+  bracket <- build_knockout_bracket(gsr$standings)
+  r32_brackets <- future_map(1:n_sims, ~bracket, .options = furrr_options(seed = 8136))
 }
 
 ### R32 (16 games)

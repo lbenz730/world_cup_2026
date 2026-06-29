@@ -1,7 +1,7 @@
 # Code Style
 
 - Always use exactly 1 space before and after `<-`, `~`, and `=` operators — never pad with extra spaces to align multiple lines
-- `if`/`else` always uses `{` `}` with the body on the next line — never inline; `if (cond) x else y` is not allowed
+- `if`/`else` always uses `{` `}` with the body on the next line — never inline; `if(cond) x else y` is not allowed; no space before `(` in `if()`/`for()`/`while()`
 - Multi-line function calls: first argument on the same line as `(`, subsequent arguments indented to align with the first, closing `)` on the last argument's line — never a newline after `(` or `)` on its own line
 - Long pipelines/chains start on a new line after the assignment:
   ```r
