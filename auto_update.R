@@ -25,3 +25,4 @@ source('ko_matchup_tables.R')
 
 ### Comparison Plot for R16
 source('comparison_plot.R')
+source('contest_standings_table.R')

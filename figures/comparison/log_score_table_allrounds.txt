@@ -19,7 +19,6 @@
 |Australia              |35.1%                    |35.1%                   |17.2%         |14.8%              |       |
 |Norway                 |34.9%                    |34.9%                   |53.2%         |59.9%              |       |
 |Egypt                  |27.5%                    |27.5%                   |31.5%         |23.9%              |       |
-|Ivory Coast            |26.8%                    |26.8%                   |31.5%         |16.3%              |       |
 |Paraguay               |26.5%                    |26.5%                   |28.1%         |36.5%              |       |
 |Algeria                |21.3%                    |21.3%                   |20.2%         |14.1%              |       |
 |Austria                |20.9%                    |20.9%                   |29.5%         |19.6%              |       |
@@ -35,6 +34,7 @@
 |:------------|:------------------------|:-----------------------|:--------------|:------------------|:-----------------------|
 |South Africa |0.0%                     |28.1% (-1.269)          |26.9% (-1.314) |27.3% (-1.298)     |👓 Recspecs730 ⭐       |
 |Germany      |0.0%                     |32.6% (-1.122)          |29.3% (-1.229) |27.9% (-1.278)     |👓 Recspecs730 ⭐⭐     |
+|Ivory Coast  |0.0%                     |43.9% (-0.824)          |48.9% (-0.715) |50.8% (-0.678)     |🟩 Silver Bulletin ⭐   |
 |Netherlands  |0.0%                     |44.1% (-0.820)          |35.8% (-1.027) |42.1% (-0.866)     |👓 Recspecs730 ⭐       |
 |Japan        |0.0%                     |45.3% (-0.792)          |39.0% (-0.941) |50.8% (-0.677)     |🟩 Silver Bulletin ⭐⭐ |
 
@@ -59,11 +59,11 @@
 |Uzbekistan    |0.0%                     |57.8% (-0.549)          |66.3% (-0.411) |66.0% (-0.416)     |🔵 Polymarket ⭐        |
 |Panama        |0.0%                     |66.5% (-0.408)          |63.3% (-0.457) |45.8% (-0.782)     |👓 Recspecs730 ⭐       |
 |              |                         |                        |               |                   |                        |
-|**Log Score** |                         |-16.156                 |-15.717        |-16.360            |                        |
+|**Log Score** |                         |-16.980                 |-16.432        |-17.038            |                        |
 
 _**Log score (all rounds):** For each resolved team, each forecaster earns log(p) where p is their_
 _pre-tournament marginal probability of the team's actual elimination round (or championship)._
-_Scores are summed across all 20 resolved teams (higher is better)._
+_Scores are summed across all 21 resolved teams (higher is better)._
 
 _**Current probability:** For still-competing teams, shows Recspecs730's pre-tournament_
 _probability of the team surviving all rounds played so far (1 − Σ P_eliminated for resolved rounds)._
@@ -74,9 +74,9 @@ _**Winner margin key:** ⭐ < 0.05 log score margin | ⭐⭐ 0.05–0.25 | ⭐�
 
 |Forecaster         |Brier Score |
 |:------------------|:-----------|
-|🔵 Polymarket      |8.351       |
-|👓 Recspecs730     |8.365       |
-|🟩 Silver Bulletin |8.646       |
+|🔵 Polymarket      |8.700       |
+|👓 Recspecs730     |8.804       |
+|🟩 Silver Bulletin |9.013       |
 
 _**Brier score (multi-category):** For each resolved team, each forecaster is penalized_
 _Σ (p_j − I_j)² across all 7 outcome categories (GS/R32/R16/QF/SF/LF/WF),_
