@@ -109,44 +109,40 @@ team_outcomes <- bind_rows(gs_eliminated, ko_outcomes)
 n_resolved <- nrow(team_outcomes)
 n_still_alive <- 48 - n_resolved
 
-### ── Compute scores ─────────────────────────────────────────────────────────
-scores <-
+### ── Compute log scores by round ────────────────────────────────────────────
+round_order <- c("R1", "R32", "R16", "QF", "SF", "LF", "WF")
+
+scores_by_round <-
   forecaster_probs %>%
   inner_join(select(team_outcomes, team, outcome_round), by = 'team') %>%
   pivot_longer(all_of(all_prob_cols), names_to = "prob_col", values_to = "prob_used") %>%
   filter(prob_col == round_to_col[outcome_round]) %>%
   mutate(log_i = log(prob_used)) %>%
-  group_by(name) %>%
-  summarise(log_score = sum(log_i), .groups = 'drop') %>%
+  group_by(name, outcome_round) %>%
+  summarise(log_score = sum(log_i), .groups = 'drop')
+
+resolved_rounds <- intersect(round_order, unique(scores_by_round$outcome_round))
+
+scores <-
+  scores_by_round %>%
+  pivot_wider(names_from = outcome_round, values_from = log_score) %>%
+  mutate(log_score = rowSums(across(all_of(resolved_rounds)), na.rm = TRUE)) %>%
   arrange(desc(log_score)) %>%
   mutate(rank = row_number())
-
-brier <-
-  forecaster_probs %>%
-  inner_join(select(team_outcomes, team, outcome_round), by = 'team') %>%
-  pivot_longer(all_of(all_prob_cols), names_to = "prob_col", values_to = "p") %>%
-  mutate(actual_col = round_to_col[outcome_round],
-         ind = as.integer(prob_col == actual_col),
-         sq_err = (p - ind)^2) %>%
-  group_by(name) %>%
-  summarise(brier = sum(sq_err), .groups = 'drop')
-
-scores_tbl <-
-  scores %>%
-  left_join(brier, by = 'name')
 
 ### ── Build gt table ─────────────────────────────────────────────────────────
 user_entry <- 'Respecs730 - v2'
 
 tbl <-
-  scores_tbl %>%
-  select(rank, name, log_score, brier) %>%
+  scores %>%
+  select(rank, name, all_of(resolved_rounds), log_score) %>%
   gt() %>%
   cols_label(rank = 'Rank',
              name = 'Forecaster',
-             log_score = 'Log Score',
-             brier = 'Brier') %>%
-  fmt_number(columns = c(log_score, brier), decimals = 3) %>%
+             log_score = 'Total',
+             !!!setNames(resolved_rounds, resolved_rounds)) %>%
+  fmt_number(columns = c(all_of(resolved_rounds), log_score), decimals = 3) %>%
+  tab_spanner(label = 'Log Score by Round', columns = all_of(resolved_rounds)) %>%
   tab_header(title = md('**FIFA World Cup 2026 — Group Stage Forecasting Contest**'),
              subtitle = md(glue::glue(
                '{n_resolved} of 48 teams resolved &nbsp;·&nbsp; {n_still_alive} still competing'
@@ -154,18 +150,19 @@ tbl <-
   tab_style(style = list(cell_fill(color = '#E63946', alpha = 0.20),
                          cell_text(weight = 'bold')),
             locations = cells_body(rows = name == user_entry)) %>%
+  tab_style(style = cell_text(weight = 'bold'),
+            locations = cells_body(columns = log_score)) %>%
   tab_style(style = cell_text(color = 'grey50'),
             locations = cells_body(columns = rank)) %>%
   tab_footnote(footnote = md(paste0(
     'Log score (higher is better): Σ log(p) where p is the pre-tournament marginal probability ',
     'of the team\'s actual elimination round (GS/R32/R16/QF/SF/LF/WF). ',
-    'Brier (lower is better): Σ (p_j − I_j)² across all 7 outcome categories per resolved team. ',
     '3rd-place tiebreaker: points → goal difference → goals scored.')),
     locations = cells_column_labels(columns = log_score)) %>%
   cols_width(rank ~ px(55),
-             name ~ px(300),
-             log_score ~ px(110),
-             brier ~ px(90)) %>%
+             name ~ px(280),
+             log_score ~ px(90),
+             everything() ~ px(75)) %>%
   opt_table_font(font = google_font('Source Sans Pro')) %>%
   tab_options(table.border.top.color = 'transparent',
               heading.border.bottom.color = '#dddddd',

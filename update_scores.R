@@ -33,46 +33,69 @@ get_scores <- function(date, schedule) {
 
   ### Parse one HTML table. ESPN column structure (consistent for all game states):
   ###   V1 = team1 name  ("Mexico", "South Korea")
-  ###   V2 = " v {team2}" for upcoming, or " {score} {team2}" for completed
-  ###   V3 = kickoff time for upcoming, "FT" or "FT-Pens" for completed
+  ###   V2 = " v {team2}" for upcoming, or " {score} {team2}" for in-progress/completed
+  ###   V3 = kickoff time for upcoming, "FT"/"FT-Pens" for completed, "45'" etc for live
   parse_table <- function(tbl) {
     if(is.null(tbl) || ncol(tbl) < 2 || nrow(tbl) == 0) return(NULL)
     tryCatch({
       v1 <- clean_str(as.character(tbl[, 1]))
       v2 <- clean_str(as.character(tbl[, 2]))
+      ### Default v3 to "FT" so score-bearing rows without a V3 column are treated as final
+      v3 <- if(ncol(tbl) >= 3) trimws(as.character(tbl[, 3])) else rep('FT', nrow(tbl))
 
-      completed <- str_detect(v2, '\\d+ - \\d+')
+      ### ESPN appends "Team advance X-Y on penalties" as a V1-only footnote row (V2/V3 = NA)
+      ### after FT-Pens games. Extract the shootout winner from V1 of those rows before
+      ### dropping them — otherwise str_detect(NA, ...) propagates NA into any() and crashes.
+      pre_filter_sw <- rep(NA_character_, nrow(tbl))
+      for(i in seq_len(nrow(tbl))) {
+        if(i > 1 && is.na(v2[i]) && isTRUE(str_detect(v3[i - 1], 'FT-Pens'))) {
+          winner <- tms[map_lgl(tms, ~grepl(.x, v1[i], ignore.case = TRUE))]
+          if(length(winner) > 0) pre_filter_sw[i - 1] <- winner[1]
+        }
+      }
 
-      n <- nrow(tbl)
+      keep <- !is.na(v2)
+      if(!any(keep)) return(NULL)
+      v1 <- v1[keep]; v2 <- v2[keep]; v3 <- v3[keep]; pre_filter_sw <- pre_filter_sw[keep]
+
+      has_score <- str_detect(v2, '\\d+\\s*-\\s*\\d+')
+      completed <- has_score & str_detect(v3, '^FT')
+      is_live   <- has_score & !completed
+
+      n <- length(v1)
       team1           <- v1
       team2           <- rep(NA_character_, n)
       team1_score     <- rep(NA_real_, n)
       team2_score     <- rep(NA_real_, n)
       shootout_winner <- rep(NA_character_, n)
 
-      # Completed: V2 = "2 - 0 South Africa"
+      # Completed (FT / FT-Pens): V2 = "2 - 0 South Africa"
       if(any(completed)) {
-        sc <- str_extract(v2[completed], '\\d+ - \\d+')
+        sc <- str_extract(v2[completed], '\\d+\\s*-\\s*\\d+')
         team1_score[completed] <- as.numeric(str_extract(sc, '^\\d+'))
         team2_score[completed] <- as.numeric(str_extract(sc, '\\d+$'))
-        team2[completed] <- trimws(str_replace(v2[completed], '^.*\\d+ - \\d+\\s*', ''))
+        team2[completed] <- trimws(str_replace(v2[completed], '^.*\\d+\\s*-\\s*\\d+\\s*', ''))
+      }
+
+      # Live (in-progress): extract team names but no score recorded yet
+      if(any(is_live)) {
+        team2[is_live] <- trimws(str_replace(v2[is_live], '^.*\\d+\\s*-\\s*\\d+\\s*', ''))
       }
 
       # Upcoming: V2 = "v Czechia"
-      if(any(!completed)) {
-        team2[!completed] <- trimws(str_replace(v2[!completed], '^v\\s+', ''))
+      if(any(!has_score)) {
+        team2[!has_score] <- trimws(str_replace(v2[!has_score], '^v\\s+', ''))
       }
 
-      # FT-Pens: check V3 if available
-      if(ncol(tbl) >= 3) {
-        v3 <- trimws(as.character(tbl[, 3]))
-        penalties_ix <- which(str_detect(v3, 'FT-Pens'))
-        if(length(penalties_ix) > 0) {
-          shootout_winner[penalties_ix] <- map_chr(v2[penalties_ix], function(x) {
-            winner <- tms[map_lgl(tms, ~grepl(paste0(.x, '.*(win|advance).*on penalties'), x))]
-            if(length(winner) == 0) NA_character_ else winner[1]
-          })
-        }
+      # FT-Pens: determine shootout winner from footnote V1 (pre_filter_sw),
+      # falling back to old-style text in V2 if not found there
+      penalties_ix <- which(str_detect(v3, 'FT-Pens'))
+      if(length(penalties_ix) > 0) {
+        shootout_winner[penalties_ix] <- map_chr(penalties_ix, function(ix) {
+          if(!is.na(pre_filter_sw[ix])) return(pre_filter_sw[ix])
+          winner <- tms[map_lgl(tms, ~grepl(paste0(.x, '.*(win|advance).*on penalties'), v2[ix]))]
+          if(length(winner) == 0) NA_character_ else winner[1]
+        })
       }
 
       df <-

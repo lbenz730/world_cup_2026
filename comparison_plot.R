@@ -304,7 +304,7 @@ ggplot(df_long_r32, aes(x = P_R32, y = team)) +
   labs(x = "Probability of Being Eliminated in Round of 32",
        y = NULL,
        title = "FIFA World Cup 2026",
-       subtitle = "R32 Elimination Probability — Forecaster Comparison",
+       subtitle = "R32 Elimination Probability - Forecaster Comparison",
        colour = NULL) +
   theme(legend.position = "bottom",
         legend.text = element_text(size = 14),

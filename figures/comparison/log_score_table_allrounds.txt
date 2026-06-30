@@ -5,7 +5,6 @@
 |England                |69.1%                    |69.1%                   |71.4%         |77.3%              |       |
 |France                 |66.0%                    |66.0%                   |77.3%         |75.9%              |       |
 |Portugal               |64.4%                    |64.4%                   |69.4%         |68.0%              |       |
-|Germany                |63.4%                    |63.4%                   |67.4%         |70.0%              |       |
 |Argentina              |62.9%                    |62.9%                   |68.4%         |74.1%              |       |
 |Belgium                |62.6%                    |62.6%                   |61.5%         |65.8%              |       |
 |Switzerland            |60.5%                    |60.5%                   |55.6%         |65.6%              |       |
@@ -16,7 +15,6 @@
 |Croatia                |49.4%                    |49.4%                   |38.9%         |39.9%              |       |
 |Ecuador                |48.9%                    |48.9%                   |41.8%         |49.2%              |       |
 |United States          |48.2%                    |48.2%                   |46.3%         |52.3%              |       |
-|Netherlands            |42.6%                    |42.6%                   |54.1%         |51.4%              |       |
 |Senegal                |38.6%                    |38.6%                   |33.0%         |34.0%              |       |
 |Australia              |35.1%                    |35.1%                   |17.2%         |14.8%              |       |
 |Norway                 |34.9%                    |34.9%                   |53.2%         |59.9%              |       |
@@ -36,6 +34,8 @@
 |Team         |Current (👓 Recspecs730) |Pre-WC (👓 Recspecs730) |🔵 Polymarket  |🟩 Silver Bulletin |Winner                  |
 |:------------|:------------------------|:-----------------------|:--------------|:------------------|:-----------------------|
 |South Africa |0.0%                     |28.1% (-1.269)          |26.9% (-1.314) |27.3% (-1.298)     |👓 Recspecs730 ⭐       |
+|Germany      |0.0%                     |32.6% (-1.122)          |29.3% (-1.229) |27.9% (-1.278)     |👓 Recspecs730 ⭐⭐     |
+|Netherlands  |0.0%                     |44.1% (-0.820)          |35.8% (-1.027) |42.1% (-0.866)     |👓 Recspecs730 ⭐       |
 |Japan        |0.0%                     |45.3% (-0.792)          |39.0% (-0.941) |50.8% (-0.677)     |🟩 Silver Bulletin ⭐⭐ |
 
 **— Eliminated: Group Stage —**
@@ -59,11 +59,11 @@
 |Uzbekistan    |0.0%                     |57.8% (-0.549)          |66.3% (-0.411) |66.0% (-0.416)     |🔵 Polymarket ⭐        |
 |Panama        |0.0%                     |66.5% (-0.408)          |63.3% (-0.457) |45.8% (-0.782)     |👓 Recspecs730 ⭐       |
 |              |                         |                        |               |                   |                        |
-|**Log Score** |                         |-14.214                 |-13.460        |-14.216            |                        |
+|**Log Score** |                         |-16.156                 |-15.717        |-16.360            |                        |
 
 _**Log score (all rounds):** For each resolved team, each forecaster earns log(p) where p is their_
 _pre-tournament marginal probability of the team's actual elimination round (or championship)._
-_Scores are summed across all 18 resolved teams (higher is better)._
+_Scores are summed across all 20 resolved teams (higher is better)._
 
 _**Current probability:** For still-competing teams, shows Recspecs730's pre-tournament_
 _probability of the team surviving all rounds played so far (1 − Σ P_eliminated for resolved rounds)._
@@ -74,9 +74,9 @@ _**Winner margin key:** ⭐ < 0.05 log score margin | ⭐⭐ 0.05–0.25 | ⭐�
 
 |Forecaster         |Brier Score |
 |:------------------|:-----------|
-|🔵 Polymarket      |7.204       |
-|👓 Recspecs730     |7.405       |
-|🟩 Silver Bulletin |7.566       |
+|🔵 Polymarket      |8.351       |
+|👓 Recspecs730     |8.365       |
+|🟩 Silver Bulletin |8.646       |
 
 _**Brier score (multi-category):** For each resolved team, each forecaster is penalized_
 _Σ (p_j − I_j)² across all 7 outcome categories (GS/R32/R16/QF/SF/LF/WF),_
