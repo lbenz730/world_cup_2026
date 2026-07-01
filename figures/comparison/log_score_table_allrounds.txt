@@ -23,7 +23,6 @@
 |Austria                |20.9%                    |20.9%                   |29.5%         |19.6%              |       |
 |Bosnia and Herzegovina |16.2%                    |16.2%                   |23.6%         |18.3%              |       |
 |Ghana                  |10.5%                    |10.5%                   |15.8%         |3.0%               |       |
-|DR Congo               |8.7%                     |8.7%                    |10.8%         |7.8%               |       |
 |Cape Verde             |3.4%                     |3.4%                    |4.9%          |2.9%               |       |
 
 **— Eliminated: Round of 32 —**
@@ -37,6 +36,7 @@
 |Netherlands  |0.0%                     |44.1% (-0.820)          |35.8% (-1.027) |42.1% (-0.866)     |👓 Recspecs730 ⭐       |
 |Japan        |0.0%                     |45.3% (-0.792)          |39.0% (-0.941) |50.8% (-0.677)     |🟩 Silver Bulletin ⭐⭐ |
 |Sweden       |0.0%                     |38.5% (-0.954)          |39.7% (-0.925) |49.0% (-0.714)     |🟩 Silver Bulletin ⭐⭐ |
+|DR Congo     |0.0%                     |27.8% (-1.279)          |31.9% (-1.143) |32.0% (-1.139)     |🟩 Silver Bulletin ⭐   |
 
 **— Eliminated: Group Stage —**
 
@@ -59,11 +59,11 @@
 |Uzbekistan    |0.0%                     |57.8% (-0.549)          |66.3% (-0.411) |66.0% (-0.416)     |🔵 Polymarket ⭐        |
 |Panama        |0.0%                     |66.5% (-0.408)          |63.3% (-0.457) |45.8% (-0.782)     |👓 Recspecs730 ⭐       |
 |              |                         |                        |               |                   |                        |
-|**Log Score** |                         |-18.859                 |-18.109        |-18.582            |                        |
+|**Log Score** |                         |-20.138                 |-19.252        |-19.722            |                        |
 
 _**Log score (all rounds):** For each resolved team, each forecaster earns log(p) where p is their_
 _pre-tournament marginal probability of the team's actual elimination round (or championship)._
-_Scores are summed across all 23 resolved teams (higher is better)._
+_Scores are summed across all 24 resolved teams (higher is better)._
 
 _**Current probability:** For still-competing teams, shows Recspecs730's pre-tournament_
 _probability of the team surviving all rounds played so far (1 − Σ P_eliminated for resolved rounds)._
@@ -74,9 +74,9 @@ _**Winner margin key:** ⭐ < 0.05 log score margin | ⭐⭐ 0.05–0.25 | ⭐�
 
 |Forecaster         |Brier Score |
 |:------------------|:-----------|
-|🔵 Polymarket      |9.596       |
-|🟩 Silver Bulletin |9.837       |
-|👓 Recspecs730     |9.849       |
+|🔵 Polymarket      |10.393      |
+|🟩 Silver Bulletin |10.666      |
+|👓 Recspecs730     |10.777      |
 
 _**Brier score (multi-category):** For each resolved team, each forecaster is penalized_
 _Σ (p_j − I_j)² across all 7 outcome categories (GS/R32/R16/QF/SF/LF/WF),_
