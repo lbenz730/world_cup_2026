@@ -71,14 +71,14 @@ date,team1,team2,location,group,ko_round,team1_score,team2_score,shootout_winner
 2026-06-23,Panama,Croatia,Canada,L,NA,0,1,NA
 2026-06-27,Panama,England,United States,L,NA,0,2,NA
 2026-06-27,Croatia,Ghana,United States,L,NA,2,1,NA
-2026-06-30,Mexico,Ecuador,Mexico,NA,R32 1,NA,NA,NA
+2026-06-30,Mexico,Ecuador,Mexico,NA,R32 1,2,0,NA
 2026-07-02,Switzerland,Algeria,Canada,NA,R32 2,NA,NA,NA
 2026-06-28,South Africa,Canada,United States,NA,R32 3,0,1,NA
 2026-06-29,Netherlands,Morocco,Mexico,NA,R32 4,1,1,Morocco
 2026-07-02,Portugal,Croatia,Canada,NA,R32 5,NA,NA,NA
 2026-07-02,Spain,Austria,United States,NA,R32 6,NA,NA,NA
 2026-07-01,Belgium,Senegal,United States,NA,R32 7,NA,NA,NA
-2026-06-30,France,Sweden,United States,NA,R32 8,NA,NA,NA
+2026-06-30,France,Sweden,United States,NA,R32 8,3,0,NA
 2026-06-29,Brazil,Japan,United States,NA,R32 9,2,1,NA
 2026-06-30,Ivory Coast,Norway,United States,NA,R32 10,1,2,NA
 2026-07-01,United States,Bosnia and Herzegovina,United States,NA,R32 11,NA,NA,NA
@@ -87,14 +87,14 @@ date,team1,team2,location,group,ko_round,team1_score,team2_score,shootout_winner
 2026-07-03,Australia,Egypt,United States,NA,R32 14,NA,NA,NA
 2026-07-03,Colombia,Ghana,United States,NA,R32 15,NA,NA,NA
 2026-07-01,England,DR Congo,United States,NA,R32 16,NA,NA,NA
-2026-07-04,Paraguay,NA,United States,NA,R16 1,NA,NA,NA
+2026-07-04,Paraguay,France,United States,NA,R16 1,NA,NA,NA
 2026-07-04,Canada,Morocco,United States,NA,R16 2,NA,NA,NA
 2026-07-07,NA,NA,United States,NA,R16 3,NA,NA,NA
 2026-07-07,NA,NA,Canada,NA,R16 4,NA,NA,NA
 2026-07-06,NA,NA,United States,NA,R16 5,NA,NA,NA
 2026-07-06,NA,NA,United States,NA,R16 6,NA,NA,NA
 2026-07-05,Brazil,Norway,United States,NA,R16 7,NA,NA,NA
-2026-07-05,NA,NA,Mexico,NA,R16 8,NA,NA,NA
+2026-07-05,Mexico,NA,Mexico,NA,R16 8,NA,NA,NA
 2026-07-09,NA,NA,United States,NA,QF 1,NA,NA,NA
 2026-07-11,NA,NA,United States,NA,QF 2,NA,NA,NA
 2026-07-10,NA,NA,United States,NA,QF 3,NA,NA,NA
