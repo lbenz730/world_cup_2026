@@ -59,7 +59,7 @@ get_scores <- function(date, schedule) {
       v1 <- v1[keep]; v2 <- v2[keep]; v3 <- v3[keep]; pre_filter_sw <- pre_filter_sw[keep]
 
       has_score <- str_detect(v2, '\\d+\\s*-\\s*\\d+')
-      completed <- has_score & str_detect(v3, '^FT')
+      completed <- has_score & str_detect(v3, '^(FT|AET)')
       is_live   <- has_score & !completed
 
       n <- length(v1)
