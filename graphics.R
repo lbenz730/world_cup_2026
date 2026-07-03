@@ -188,7 +188,7 @@ df_matchups %>%
   gt() %>%
   text_transform(
     locations = cells_body(columns = contains('flag')),
-    fn = function(x) map(x, ~gt::local_image(filename = .x, height = 20))
+    fn = function(x) map(x, ~if(is.na(.x)) '' else gt::local_image(filename = .x, height = 20))
   ) %>%
   fmt_percent(columns = contains('prob'), decimals = 1) %>%
   tab_spanner(label = 'Round of 32',   columns = starts_with('r32')) %>%
