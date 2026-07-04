@@ -212,3 +212,15 @@ theme_set(theme_bw() +
 transparent <- function(img) {
   magick::image_fx(img, expression = "0.2*a", channel = "alpha")
 }
+
+### KO round prefixes (R32/R16/QF/SF) where every scheduled game has been played
+globally_resolved_rounds <- function(schedule) {
+  schedule %>%
+    filter(!is.na(ko_round)) %>%
+    mutate('round_prefix' = str_extract(ko_round, "^[A-Za-z0-9]+")) %>%
+    filter(round_prefix %in% c("R32", "R16", "QF", "SF")) %>%
+    group_by(round_prefix) %>%
+    summarise('resolved' = all(!is.na(team1_score)), .groups = "drop") %>%
+    filter(resolved) %>%
+    pull(round_prefix)
+}

@@ -20,6 +20,7 @@ round_to_col <- c(R1 = "P_R1", R32 = "P_R32", R16 = "P_R16",
 
 forecaster_probs <-
   df_raw %>%
+  filter(name != 'Perfect Foresight') %>%
   mutate(across(all_of(all_prob_cols), as.numeric),
          team = recode(team, !!!sheet_to_sched)) %>%
   select(name, team, all_of(all_prob_cols))
@@ -123,10 +124,22 @@ scores_by_round <-
 
 resolved_rounds <- intersect(round_order, unique(scores_by_round$outcome_round))
 
+### ── Score still-competing teams via survival probability ───────────────────
+deduct_cols <- c("P_R1", paste0("P_", globally_resolved_rounds(schedule)))
+survival_cols <- setdiff(all_prob_cols, deduct_cols)
+
+active_scores <-
+  forecaster_probs %>%
+  anti_join(team_outcomes, by = 'team') %>%
+  mutate(p_alive = rowSums(across(all_of(survival_cols)))) %>%
+  group_by(name) %>%
+  summarise(Active = sum(log(p_alive)), .groups = 'drop')
+
 scores <-
   scores_by_round %>%
   pivot_wider(names_from = outcome_round, values_from = log_score) %>%
-  mutate(log_score = rowSums(across(all_of(resolved_rounds)), na.rm = TRUE)) %>%
+  left_join(active_scores, by = 'name') %>%
+  mutate(log_score = rowSums(across(all_of(c(resolved_rounds, "Active"))), na.rm = TRUE)) %>%
   arrange(desc(log_score)) %>%
   mutate(rank = row_number())
 
@@ -135,15 +148,16 @@ user_entry <- 'Respecs730 - v2'
 
 tbl <-
   scores %>%
-  select(rank, name, all_of(resolved_rounds), log_score) %>%
+  select(rank, name, all_of(resolved_rounds), Active, log_score) %>%
   gt() %>%
   cols_label(rank = 'Rank',
              name = 'Forecaster',
+             Active = 'Active',
              log_score = 'Total',
              !!!setNames(resolved_rounds, resolved_rounds)) %>%
-  fmt_number(columns = c(all_of(resolved_rounds), log_score), decimals = 3) %>%
+  fmt_number(columns = c(all_of(resolved_rounds), Active, log_score), decimals = 3) %>%
   tab_spanner(label = 'Log Score by Round', columns = all_of(resolved_rounds)) %>%
-  tab_header(title = md('**FIFA World Cup 2026 — Group Stage Forecasting Contest**'),
+  tab_header(title = md('**FIFA World Cup 2026 — Forecasting Contest**'),
              subtitle = md(glue::glue(
                '{n_resolved} of 48 teams resolved &nbsp;·&nbsp; {n_still_alive} still competing'
              ))) %>%
@@ -155,12 +169,15 @@ tbl <-
   tab_style(style = cell_text(color = 'grey50'),
             locations = cells_body(columns = rank)) %>%
   tab_footnote(footnote = md(paste0(
-    'Log score (higher is better): Σ log(p) where p is the pre-tournament marginal probability ',
-    'of the team\'s actual elimination round (GS/R32/R16/QF/SF/LF/WF). ',
+    'Log score (higher is better): for resolved teams, Σ log(p) where p is the pre-tournament ',
+    'marginal probability of the team\'s actual elimination round (GS/R32/R16/QF/SF/LF/WF). ',
+    'For still-competing teams (Active column), Σ log(1 − Σ eliminated-round p) using survival ',
+    'probability through the most recently completed round. ',
     '3rd-place tiebreaker: points → goal difference → goals scored.')),
     locations = cells_column_labels(columns = log_score)) %>%
   cols_width(rank ~ px(55),
              name ~ px(280),
+             Active ~ px(75),
              log_score ~ px(90),
              everything() ~ px(75)) %>%
   opt_table_font(font = google_font('Source Sans Pro')) %>%

@@ -40,30 +40,38 @@
 
 **— Eliminated: Group Stage —**
 
-|Team          |Current (👓 Recspecs730) |Pre-WC (👓 Recspecs730) |🔵 Polymarket  |🟩 Silver Bulletin |Winner                  |
-|:-------------|:------------------------|:-----------------------|:--------------|:------------------|:-----------------------|
-|South Korea   |0.0%                     |26.1% (-1.343)          |30.1% (-1.199) |33.4% (-1.098)     |🟩 Silver Bulletin ⭐⭐ |
-|Czechia       |0.0%                     |34.6% (-1.061)          |30.1% (-1.199) |34.6% (-1.063)     |👓 Recspecs730 ⭐       |
-|Qatar         |0.0%                     |69.4% (-0.365)          |78.4% (-0.243) |86.8% (-0.141)     |🟩 Silver Bulletin ⭐⭐ |
-|Haiti         |0.0%                     |84.7% (-0.166)          |87.4% (-0.134) |78.0% (-0.248)     |🔵 Polymarket ⭐        |
-|Scotland      |0.0%                     |40.3% (-0.909)          |31.1% (-1.166) |28.1% (-1.269)     |👓 Recspecs730 ⭐⭐⭐   |
-|Turkiye       |0.0%                     |40.7% (-0.898)          |20.1% (-1.605) |14.4% (-1.936)     |👓 Recspecs730 ⭐⭐⭐   |
-|Curaçao       |0.0%                     |83.6% (-0.179)          |92.5% (-0.078) |88.6% (-0.121)     |🔵 Polymarket ⭐        |
-|Tunisia       |0.0%                     |50.4% (-0.685)          |61.3% (-0.489) |71.9% (-0.331)     |🟩 Silver Bulletin ⭐⭐ |
-|Iran          |0.0%                     |19.8% (-1.621)          |37.8% (-0.973) |34.3% (-1.070)     |🔵 Polymarket ⭐⭐      |
-|New Zealand   |0.0%                     |73.6% (-0.306)          |68.3% (-0.381) |69.1% (-0.370)     |👓 Recspecs730 ⭐⭐     |
-|Saudi Arabia  |0.0%                     |57.9% (-0.547)          |63.3% (-0.457) |68.9% (-0.373)     |🟩 Silver Bulletin ⭐⭐ |
-|Uruguay       |0.0%                     |8.8% (-2.425)           |13.1% (-2.036) |7.2% (-2.627)      |🔵 Polymarket ⭐⭐⭐    |
-|Iraq          |0.0%                     |71.0% (-0.343)          |85.4% (-0.158) |88.0% (-0.128)     |🟩 Silver Bulletin ⭐   |
-|Jordan        |0.0%                     |70.6% (-0.348)          |80.4% (-0.218) |76.4% (-0.269)     |🔵 Polymarket ⭐⭐      |
-|Uzbekistan    |0.0%                     |57.8% (-0.549)          |66.3% (-0.411) |66.0% (-0.416)     |🔵 Polymarket ⭐        |
-|Panama        |0.0%                     |66.5% (-0.408)          |63.3% (-0.457) |45.8% (-0.782)     |👓 Recspecs730 ⭐       |
-|              |                         |                        |               |                   |                        |
-|**Log Score** |                         |-28.633                 |-27.019        |-27.635            |                        |
+|Team         |Current (👓 Recspecs730) |Pre-WC (👓 Recspecs730) |🔵 Polymarket  |🟩 Silver Bulletin |Winner                  |
+|:------------|:------------------------|:-----------------------|:--------------|:------------------|:-----------------------|
+|South Korea  |0.0%                     |26.1% (-1.343)          |30.1% (-1.199) |33.4% (-1.098)     |🟩 Silver Bulletin ⭐⭐ |
+|Czechia      |0.0%                     |34.6% (-1.061)          |30.1% (-1.199) |34.6% (-1.063)     |👓 Recspecs730 ⭐       |
+|Qatar        |0.0%                     |69.4% (-0.365)          |78.4% (-0.243) |86.8% (-0.141)     |🟩 Silver Bulletin ⭐⭐ |
+|Haiti        |0.0%                     |84.7% (-0.166)          |87.4% (-0.134) |78.0% (-0.248)     |🔵 Polymarket ⭐        |
+|Scotland     |0.0%                     |40.3% (-0.909)          |31.1% (-1.166) |28.1% (-1.269)     |👓 Recspecs730 ⭐⭐⭐   |
+|Turkiye      |0.0%                     |40.7% (-0.898)          |20.1% (-1.605) |14.4% (-1.936)     |👓 Recspecs730 ⭐⭐⭐   |
+|Curaçao      |0.0%                     |83.6% (-0.179)          |92.5% (-0.078) |88.6% (-0.121)     |🔵 Polymarket ⭐        |
+|Tunisia      |0.0%                     |50.4% (-0.685)          |61.3% (-0.489) |71.9% (-0.331)     |🟩 Silver Bulletin ⭐⭐ |
+|Iran         |0.0%                     |19.8% (-1.621)          |37.8% (-0.973) |34.3% (-1.070)     |🔵 Polymarket ⭐⭐      |
+|New Zealand  |0.0%                     |73.6% (-0.306)          |68.3% (-0.381) |69.1% (-0.370)     |👓 Recspecs730 ⭐⭐     |
+|Saudi Arabia |0.0%                     |57.9% (-0.547)          |63.3% (-0.457) |68.9% (-0.373)     |🟩 Silver Bulletin ⭐⭐ |
+|Uruguay      |0.0%                     |8.8% (-2.425)           |13.1% (-2.036) |7.2% (-2.627)      |🔵 Polymarket ⭐⭐⭐    |
+|Iraq         |0.0%                     |71.0% (-0.343)          |85.4% (-0.158) |88.0% (-0.128)     |🟩 Silver Bulletin ⭐   |
+|Jordan       |0.0%                     |70.6% (-0.348)          |80.4% (-0.218) |76.4% (-0.269)     |🔵 Polymarket ⭐⭐      |
+|Uzbekistan   |0.0%                     |57.8% (-0.549)          |66.3% (-0.411) |66.0% (-0.416)     |🔵 Polymarket ⭐        |
+|Panama       |0.0%                     |66.5% (-0.408)          |63.3% (-0.457) |45.8% (-0.782)     |👓 Recspecs730 ⭐       |
+
+## Log Score by Round
+
+|Forecaster         |R1      |R32     |Active  |Total   |
+|:------------------|:-------|:-------|:-------|:-------|
+|🟩 Silver Bulletin |-12.241 |-15.394 |-8.712  |-36.347 |
+|🔵 Polymarket      |-11.206 |-15.813 |-9.941  |-36.960 |
+|👓 Recspecs730     |-12.154 |-16.480 |-10.226 |-38.860 |
 
 _**Log score (all rounds):** For each resolved team, each forecaster earns log(p) where p is their_
 _pre-tournament marginal probability of the team's actual elimination round (or championship)._
-_Scores are summed across all 32 resolved teams (higher is better)._
+_For each still-competing team, each forecaster earns log(1 − Σ p) using their pre-tournament_
+_survival probability through the most recently completed round (the Active column)._
+_Scores are summed across all 48 teams (32 resolved, 16 still competing; higher is better)._
 
 _**Current probability:** For still-competing teams, shows Recspecs730's pre-tournament_
 _probability of the team surviving all rounds played so far (1 − Σ P_eliminated for resolved rounds)._

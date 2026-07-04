@@ -10,7 +10,8 @@ ss_url <- "https://docs.google.com/spreadsheets/d/1_UKsDiPET4ifTlTkUeIMqPLeKrGEO
 
 gs4_auth(email = "lukesbenz@gmail.com")
 
-df_raw <- read_sheet(ss_url, sheet = 'All Entries', col_types = "c")
+df_raw <- read_sheet(ss_url, sheet = 'All Entries', col_types = "c") %>%
+  filter(name != 'Perfect Foresight')
 
 ### ── Highlighted forecasters ────────────────────────────────────────────────
 highlight_cfg <-
@@ -404,15 +405,7 @@ if(nrow(ko_done_ar) > 0) {
 
 team_outcomes_ar <- bind_rows(gs_elim_ar, ko_outcomes_ar)
 
-globally_resolved_ar <-
-  sched_ar %>%
-  filter(!is.na(ko_round), !is.na(team1_score)) %>%
-  mutate(round_prefix = str_extract(ko_round, "^[A-Za-z0-9]+")) %>%
-  filter(round_prefix %in% c("R32", "R16", "QF", "SF")) %>%
-  pull(round_prefix) %>%
-  unique()
-
-deduct_cols_ar <- c("P_R1", paste0("P_", globally_resolved_ar))
+deduct_cols_ar <- c("P_R1", paste0("P_", globally_resolved_rounds(sched_ar)))
 
 hi_names_ar <- c("Silver Bulletin", "Internally Consistent Polymarket", "Respecs730 - v2")
 name_map_ar <- c("Internally Consistent Polymarket" = "Polymarket",
@@ -513,7 +506,6 @@ section_labels_ar <- c(
 )
 
 present_rounds_ar <- intersect(rounds_output_order_ar, team_outcomes_ar$outcome_round)
-last_rnd_ar <- if(length(present_rounds_ar) > 0) tail(present_rounds_ar, 1) else NA_character_
 
 alive_kable_ar <-
   tbl_ar_fmt %>%
@@ -521,34 +513,34 @@ alive_kable_ar <-
   select(-outcome_round) %>%
   knitr::kable(format = "markdown")
 
-log_scores_ar <-
+### ── Round-by-round log score breakdown ─────────────────────────────────────
+round_order_ar <- c("R1", "R32", "R16", "QF", "SF", "LF", "WF", "Active")
+
+round_breakdown_ar <-
   scoring_probs_ar %>%
-  filter(!is.na(outcome_round)) %>%
-  group_by(name) %>%
-  summarise(ls = sum(log(prob_used)), .groups = 'drop')
+  mutate(round_label = if_else(is.na(outcome_round), "Active", outcome_round)) %>%
+  group_by(name, round_label) %>%
+  summarise(log_score = sum(log(prob_used)), .groups = 'drop')
 
-get_ls_ar <- function(fc) {
-  val <- filter(log_scores_ar, name == fc) %>% pull(ls)
-  if(length(val) == 0) NA_real_ else val
-}
+present_round_labels_ar <- intersect(round_order_ar, unique(round_breakdown_ar$round_label))
 
-scores_row_ar <-
-  tibble(
-    Team = c("", "**Log Score**"),
-    `Current (👓 Recspecs730)` = c("", ""),
-    `Pre-WC (👓 Recspecs730)` = c("", sprintf("%.3f", get_ls_ar("Recspecs730"))),
-    `🔵 Polymarket` = c("", sprintf("%.3f", get_ls_ar("Polymarket"))),
-    `🟩 Silver Bulletin` = c("", sprintf("%.3f", get_ls_ar("Silver Bulletin"))),
-    Winner = c("", "")
-  )
+breakdown_wide_ar <-
+  round_breakdown_ar %>%
+  pivot_wider(names_from = round_label, values_from = log_score) %>%
+  mutate(Total = rowSums(across(all_of(present_round_labels_ar)), na.rm = TRUE),
+         Forecaster = case_when(
+           name == "Recspecs730" ~ "👓 Recspecs730",
+           name == "Polymarket" ~ "🔵 Polymarket",
+           TRUE ~ "🟩 Silver Bulletin"
+         )) %>%
+  arrange(desc(Total)) %>%
+  select(Forecaster, all_of(present_round_labels_ar), Total) %>%
+  mutate(across(all_of(c(present_round_labels_ar, "Total")), ~sprintf("%.3f", .)))
 
 elim_kables_ar <-
   present_rounds_ar %>%
   map(function(rnd) {
     rows <- filter(tbl_ar_fmt, outcome_round == rnd) %>% select(-outcome_round)
-    if(!is.na(last_rnd_ar) && rnd == last_rnd_ar) {
-      rows <- bind_rows(rows, scores_row_ar)
-    }
     c("",
       section_labels_ar[rnd],
       "",
@@ -583,9 +575,16 @@ writeLines(
   c(
     c(alive_kable_ar, elim_kables_ar),
     "",
+    "## Log Score by Round",
+    "",
+    knitr::kable(breakdown_wide_ar, format = "markdown"),
+    "",
     "_**Log score (all rounds):** For each resolved team, each forecaster earns log(p) where p is their_",
     "_pre-tournament marginal probability of the team's actual elimination round (or championship)._",
-    sprintf("_Scores are summed across all %d resolved teams (higher is better)._", n_resolved_ar),
+    "_For each still-competing team, each forecaster earns log(1 − Σ p) using their pre-tournament_",
+    "_survival probability through the most recently completed round (the Active column)._",
+    sprintf("_Scores are summed across all 48 teams (%d resolved, %d still competing; higher is better)._",
+            n_resolved_ar, 48 - n_resolved_ar),
     "",
     "_**Current probability:** For still-competing teams, shows Recspecs730's pre-tournament_",
     "_probability of the team surviving all rounds played so far (1 − Σ P_eliminated for resolved rounds)._",
