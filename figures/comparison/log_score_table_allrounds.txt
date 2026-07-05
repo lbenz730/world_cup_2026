@@ -3,19 +3,24 @@
 |Brazil        |74.2%                    |74.2%                   |68.4%         |70.1%              |       |
 |Spain         |73.1%                    |73.1%                   |76.3%         |75.3%              |       |
 |England       |69.1%                    |69.1%                   |71.4%         |77.3%              |       |
-|France        |66.0%                    |66.0%                   |77.3%         |75.9%              |       |
 |Portugal      |64.4%                    |64.4%                   |69.4%         |68.0%              |       |
 |Argentina     |62.9%                    |62.9%                   |68.4%         |74.1%              |       |
 |Belgium       |62.6%                    |62.6%                   |61.5%         |65.8%              |       |
 |Switzerland   |60.5%                    |60.5%                   |55.6%         |65.6%              |       |
 |Colombia      |55.9%                    |55.9%                   |50.7%         |64.2%              |       |
 |Mexico        |54.6%                    |54.6%                   |52.7%         |73.9%              |       |
-|Canada        |51.1%                    |51.1%                   |41.8%         |61.6%              |       |
-|Morocco       |49.8%                    |49.8%                   |42.3%         |30.6%              |       |
 |United States |48.2%                    |48.2%                   |46.3%         |52.3%              |       |
+|France        |39.3%                    |39.3%                   |52.3%         |50.2%              |       |
 |Norway        |34.9%                    |34.9%                   |53.2%         |59.9%              |       |
+|Morocco       |31.0%                    |31.0%                   |20.0%         |13.4%              |       |
 |Egypt         |27.5%                    |27.5%                   |31.5%         |23.9%              |       |
-|Paraguay      |26.5%                    |26.5%                   |28.1%         |36.5%              |       |
+
+**— Eliminated: Round of 16 —**
+
+|Team     |Current (👓 Recspecs730) |Pre-WC (👓 Recspecs730) |🔵 Polymarket  |🟩 Silver Bulletin |Winner                  |
+|:--------|:------------------------|:-----------------------|:--------------|:------------------|:-----------------------|
+|Canada   |0.0%                     |33.3% (-1.100)          |28.7% (-1.250) |37.2% (-0.990)     |🟩 Silver Bulletin ⭐⭐ |
+|Paraguay |0.0%                     |17.3% (-1.756)          |18.5% (-1.687) |23.7% (-1.438)     |🟩 Silver Bulletin ⭐⭐ |
 
 **— Eliminated: Round of 32 —**
 
@@ -61,17 +66,17 @@
 
 ## Log Score by Round
 
-|Forecaster         |R1      |R32     |Active  |Total   |
-|:------------------|:-------|:-------|:-------|:-------|
-|🟩 Silver Bulletin |-12.241 |-15.394 |-8.712  |-36.347 |
-|🔵 Polymarket      |-11.206 |-15.813 |-9.941  |-36.960 |
-|👓 Recspecs730     |-12.154 |-16.480 |-10.226 |-38.860 |
+|Forecaster         |R1      |R32     |R16    |Active |Total   |
+|:------------------|:-------|:-------|:------|:------|:-------|
+|🟩 Silver Bulletin |-12.241 |-15.394 |-2.428 |-8.458 |-38.521 |
+|🔵 Polymarket      |-11.206 |-15.813 |-2.936 |-8.939 |-38.894 |
+|👓 Recspecs730     |-12.154 |-16.480 |-2.856 |-9.218 |-40.708 |
 
 _**Log score (all rounds):** For each resolved team, each forecaster earns log(p) where p is their_
 _pre-tournament marginal probability of the team's actual elimination round (or championship)._
 _For each still-competing team, each forecaster earns log(1 − Σ p) using their pre-tournament_
 _survival probability through the most recently completed round (the Active column)._
-_Scores are summed across all 48 teams (32 resolved, 16 still competing; higher is better)._
+_Scores are summed across all 48 teams (34 resolved, 14 still competing; higher is better)._
 
 _**Current probability:** For still-competing teams, shows Recspecs730's pre-tournament_
 _probability of the team surviving all rounds played so far (1 − Σ P_eliminated for resolved rounds)._
@@ -82,9 +87,9 @@ _**Winner margin key:** ⭐ < 0.05 log score margin | ⭐⭐ 0.05–0.25 | ⭐�
 
 |Forecaster         |Brier Score |
 |:------------------|:-----------|
-|🔵 Polymarket      |15.060      |
-|🟩 Silver Bulletin |15.728      |
-|👓 Recspecs730     |15.994      |
+|🔵 Polymarket      |16.720      |
+|🟩 Silver Bulletin |17.063      |
+|👓 Recspecs730     |17.605      |
 
 _**Brier score (multi-category):** For each resolved team, each forecaster is penalized_
 _Σ (p_j − I_j)² across all 7 outcome categories (GS/R32/R16/QF/SF/LF/WF),_

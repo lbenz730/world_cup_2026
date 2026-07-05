@@ -128,17 +128,6 @@ schedule <-
 tournament_dates <- seq.Date(as.Date('2026-06-11'), Sys.Date(), by = 1)
 scores <- map_dfr(tournament_dates, ~get_scores(.x, schedule))
 
-### For KO rounds: fill in team names from scores before joining
-ko_games <-
-  scores %>%
-  filter(team1 %in% c(schedule$team1, schedule$team2),
-         team2 %in% c(schedule$team1, schedule$team2)) %>%
-  distinct() %>%
-  filter(team1 > team2)
-
-schedule$team1[!is.na(schedule$ko_round) & is.na(schedule$team1_score)] <- NA
-schedule$team2[!is.na(schedule$ko_round) & is.na(schedule$team2_score)] <- NA
-
 ### Group stage → R32: fill bracket from group standings
 source('helpers.R')
 df_combinations <- read_csv('data/third_place_combinations.csv', show_col_types = FALSE)
@@ -197,21 +186,10 @@ if(length(groups_complete) == 12) {
   }
 }
 
-for(i in seq_len(nrow(ko_games))) {
-  ix_game <- min(which(schedule$date == ko_games$date[i] & is.na(schedule$team1)))
-  if(!is.infinite(ix_game)) {
-    schedule$team1[ix_game] <- ko_games$team1[i]
-    schedule$team2[ix_game] <- ko_games$team2[i]
-  }
-}
-
-### Update Scores
-schedule <-
-  schedule %>%
-  select(-contains('score'), -contains('shootout_winner')) %>%
-  left_join(scores, by = c('date', 'team1', 'team2'))
-
-### Bracket propagation: fill future KO slots from completed-game winners/losers
+### Bracket propagation: fill each KO round's teams from the previous round's
+### winner/loser. Fully deterministic from already-known results, so this runs
+### before the score join — identifying rows by ko_round (never by scrape
+### order or date position) avoids mismatches when multiple KO games share a date.
 ko_winner <- function(row) {
   if(is.na(row$team1_score) || is.na(row$team2_score)) {
     return(NA_character_)
@@ -298,5 +276,11 @@ if(length(sf1_ix) == 1 && length(sf2_ix) == 1) {
     if(!is.na(l2)) schedule$team2[third_ix] <- l2
   }
 }
+
+### Update Scores
+schedule <-
+  schedule %>%
+  select(-contains('score'), -contains('shootout_winner')) %>%
+  left_join(scores, by = c('date', 'team1', 'team2'))
 
 write_csv(schedule, 'data/schedule.csv')

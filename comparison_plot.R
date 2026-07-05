@@ -405,7 +405,7 @@ if(nrow(ko_done_ar) > 0) {
 
 team_outcomes_ar <- bind_rows(gs_elim_ar, ko_outcomes_ar)
 
-deduct_cols_ar <- c("P_R1", paste0("P_", globally_resolved_rounds(sched_ar)))
+survived_rounds_ar <- team_survived_rounds(sched_ar)
 
 hi_names_ar <- c("Silver Bulletin", "Internally Consistent Polymarket", "Respecs730 - v2")
 name_map_ar <- c("Internally Consistent Polymarket" = "Polymarket",
@@ -419,7 +419,9 @@ forecasters_ar <-
          name = recode(name, !!!name_map_ar)) %>%
   select(name, team, all_of(all_prob_cols))
 
-survival_cols_ar <- setdiff(all_prob_cols, deduct_cols_ar)
+resolved_cols_ar <-
+  bind_rows(tibble(team = unique(forecasters_ar$team), prob_col = "P_R1"),
+            survived_rounds_ar %>% mutate(prob_col = paste0("P_", round)) %>% select(team, prob_col))
 
 scoring_probs_ar <-
   bind_rows(
@@ -432,8 +434,10 @@ scoring_probs_ar <-
     forecasters_ar %>%
       left_join(select(team_outcomes_ar, team, outcome_round), by = "team") %>%
       filter(is.na(outcome_round)) %>%
-      mutate(prob_used = rowSums(across(all_of(survival_cols_ar)))) %>%
-      select(name, team, outcome_round, prob_used)
+      pivot_longer(all_of(all_prob_cols), names_to = "prob_col", values_to = "p") %>%
+      anti_join(resolved_cols_ar, by = c("team", "prob_col")) %>%
+      group_by(name, team, outcome_round) %>%
+      summarise(prob_used = sum(p), .groups = "drop")
   )
 
 scoring_wide_ar <-
@@ -444,13 +448,21 @@ scoring_wide_ar <-
          p_SilverBulletin = `Silver Bulletin`)
 
 recspecs_current_ar <-
-  forecasters_ar %>%
-  filter(name == "Recspecs730") %>%
-  select(-name) %>%
-  left_join(select(team_outcomes_ar, team, outcome_round), by = "team") %>%
-  mutate(current = if_else(!is.na(outcome_round), 0,
-                           rowSums(across(all_of(survival_cols_ar))))) %>%
-  select(team, current)
+  bind_rows(
+    forecasters_ar %>%
+      filter(name == "Recspecs730") %>%
+      left_join(select(team_outcomes_ar, team, outcome_round), by = "team") %>%
+      filter(!is.na(outcome_round)) %>%
+      transmute(team, current = 0),
+    forecasters_ar %>%
+      filter(name == "Recspecs730") %>%
+      left_join(select(team_outcomes_ar, team, outcome_round), by = "team") %>%
+      filter(is.na(outcome_round)) %>%
+      pivot_longer(all_of(all_prob_cols), names_to = "prob_col", values_to = "p") %>%
+      anti_join(resolved_cols_ar, by = c("team", "prob_col")) %>%
+      group_by(team) %>%
+      summarise(current = sum(p), .groups = "drop")
+  )
 
 tbl_ar <-
   scoring_wide_ar %>%

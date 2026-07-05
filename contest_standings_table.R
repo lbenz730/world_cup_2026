@@ -125,13 +125,22 @@ scores_by_round <-
 resolved_rounds <- intersect(round_order, unique(scores_by_round$outcome_round))
 
 ### ── Score still-competing teams via survival probability ───────────────────
-deduct_cols <- c("P_R1", paste0("P_", globally_resolved_rounds(schedule)))
-survival_cols <- setdiff(all_prob_cols, deduct_cols)
+### Resolved columns per team: P_R1 always (group stage complete) plus any
+### round the team has individually already won, regardless of whether every
+### game in that round has been played yet
+survived_rounds <- team_survived_rounds(schedule)
+
+resolved_cols <-
+  bind_rows(tibble(team = unique(forecaster_probs$team), prob_col = "P_R1"),
+            survived_rounds %>% mutate(prob_col = paste0("P_", round)) %>% select(team, prob_col))
 
 active_scores <-
   forecaster_probs %>%
   anti_join(team_outcomes, by = 'team') %>%
-  mutate(p_alive = rowSums(across(all_of(survival_cols)))) %>%
+  pivot_longer(all_of(all_prob_cols), names_to = 'prob_col', values_to = 'p') %>%
+  anti_join(resolved_cols, by = c('team', 'prob_col')) %>%
+  group_by(name, team) %>%
+  summarise(p_alive = sum(p), .groups = 'drop') %>%
   group_by(name) %>%
   summarise(Active = sum(log(p_alive)), .groups = 'drop')
 

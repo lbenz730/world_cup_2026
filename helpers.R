@@ -213,14 +213,18 @@ transparent <- function(img) {
   magick::image_fx(img, expression = "0.2*a", channel = "alpha")
 }
 
-### KO round prefixes (R32/R16/QF/SF) where every scheduled game has been played
-globally_resolved_rounds <- function(schedule) {
+### Per-team KO rounds a team has individually won (finer-grained than a whole
+### round being complete — lets a team get "survival" credit for a round it has
+### already won even while other games in that round remain unplayed)
+team_survived_rounds <- function(schedule) {
   schedule %>%
-    filter(!is.na(ko_round)) %>%
+    filter(!is.na(ko_round), !is.na(team1_score)) %>%
     mutate('round_prefix' = str_extract(ko_round, "^[A-Za-z0-9]+")) %>%
     filter(round_prefix %in% c("R32", "R16", "QF", "SF")) %>%
-    group_by(round_prefix) %>%
-    summarise('resolved' = all(!is.na(team1_score)), .groups = "drop") %>%
-    filter(resolved) %>%
-    pull(round_prefix)
+    mutate('winner' = case_when(team1_score > team2_score ~ team1,
+                                team2_score > team1_score ~ team2,
+                                shootout_winner == team1 ~ team1,
+                                shootout_winner == team2 ~ team2)) %>%
+    filter(!is.na(winner)) %>%
+    select('team' = winner, 'round' = round_prefix)
 }
