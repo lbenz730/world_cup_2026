@@ -89,15 +89,15 @@ date,team1,team2,location,group,ko_round,team1_score,team2_score,shootout_winner
 2026-07-01,England,DR Congo,United States,NA,R32 16,2,1,NA
 2026-07-04,Paraguay,France,United States,NA,R16 1,0,1,NA
 2026-07-04,Canada,Morocco,United States,NA,R16 2,0,3,NA
-2026-07-07,Argentina,Egypt,United States,NA,R16 3,NA,NA,NA
-2026-07-07,Switzerland,Colombia,Canada,NA,R16 4,NA,NA,NA
+2026-07-07,Argentina,Egypt,United States,NA,R16 3,3,2,NA
+2026-07-07,Switzerland,Colombia,Canada,NA,R16 4,0,0,Switzerland
 2026-07-06,Portugal,Spain,United States,NA,R16 5,0,1,NA
 2026-07-06,United States,Belgium,United States,NA,R16 6,1,4,NA
 2026-07-05,Brazil,Norway,United States,NA,R16 7,1,2,NA
 2026-07-05,Mexico,England,Mexico,NA,R16 8,2,3,NA
-2026-07-09,France,Morocco,United States,NA,QF 1,NA,NA,NA
-2026-07-11,NA,NA,United States,NA,QF 2,NA,NA,NA
-2026-07-10,NA,NA,United States,NA,QF 3,NA,NA,NA
+2026-07-09,France,Morocco,United States,NA,QF 1,2,0,NA
+2026-07-11,Argentina,Switzerland,United States,NA,QF 2,NA,NA,NA
+2026-07-10,Spain,Belgium,United States,NA,QF 3,NA,NA,NA
 2026-07-11,Norway,England,United States,NA,QF 4,NA,NA,NA
 2026-07-14,NA,NA,United States,NA,SF 1,NA,NA,NA
 2026-07-15,NA,NA,United States,NA,SF 2,NA,NA,NA
