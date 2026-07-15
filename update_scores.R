@@ -128,6 +128,14 @@ schedule <-
 tournament_dates <- seq.Date(as.Date('2026-06-11'), Sys.Date(), by = 1)
 scores <- map_dfr(tournament_dates, ~get_scores(.x, schedule))
 
+### Update Scores (must happen before bracket propagation below, so that
+### rounds completed in this same scrape immediately propagate to the next
+### round instead of waiting for the following run)
+schedule <-
+  schedule %>%
+  select(-contains('score'), -contains('shootout_winner')) %>%
+  left_join(scores, by = c('date', 'team1', 'team2'))
+
 ### Group stage → R32: fill bracket from group standings
 source('helpers.R')
 df_combinations <- read_csv('data/third_place_combinations.csv', show_col_types = FALSE)
@@ -187,9 +195,9 @@ if(length(groups_complete) == 12) {
 }
 
 ### Bracket propagation: fill each KO round's teams from the previous round's
-### winner/loser. Fully deterministic from already-known results, so this runs
-### before the score join — identifying rows by ko_round (never by scrape
-### order or date position) avoids mismatches when multiple KO games share a date.
+### winner/loser. Fully deterministic from already-known results — identifying
+### rows by ko_round (never by scrape order or date position) avoids mismatches
+### when multiple KO games share a date.
 ko_winner <- function(row) {
   if(is.na(row$team1_score) || is.na(row$team2_score)) {
     return(NA_character_)
@@ -276,11 +284,5 @@ if(length(sf1_ix) == 1 && length(sf2_ix) == 1) {
     if(!is.na(l2)) schedule$team2[third_ix] <- l2
   }
 }
-
-### Update Scores
-schedule <-
-  schedule %>%
-  select(-contains('score'), -contains('shootout_winner')) %>%
-  left_join(scores, by = c('date', 'team1', 'team2'))
 
 write_csv(schedule, 'data/schedule.csv')

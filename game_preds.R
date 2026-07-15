@@ -197,7 +197,7 @@ if(max(mw3$date) > Sys.Date()) {
 ### Knockout round tables
 df_preds_ko  <-
   preds %>%
-  filter(!is.na(ko_round), !is.na(team1)) %>%
+  filter(!is.na(ko_round), !is.na(team1), !is.na(team2)) %>%
   arrange(date) %>%
   mutate('logo1' = paste0('flags/', team1, '.png'),
          'logo2' = paste0('flags/', team2, '.png')) %>%
