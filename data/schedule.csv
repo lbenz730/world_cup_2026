@@ -100,6 +100,6 @@ date,team1,team2,location,group,ko_round,team1_score,team2_score,shootout_winner
 2026-07-10,Spain,Belgium,United States,NA,QF 3,2,1,NA
 2026-07-11,Norway,England,United States,NA,QF 4,1,2,NA
 2026-07-14,France,Spain,United States,NA,SF 1,0,2,NA
-2026-07-15,Argentina,England,United States,NA,SF 2,NA,NA,NA
-2026-07-18,France,NA,United States,NA,3RD,NA,NA,NA
-2026-07-19,Spain,NA,United States,NA,FINAL,NA,NA,NA
+2026-07-15,Argentina,England,United States,NA,SF 2,2,1,NA
+2026-07-18,France,England,United States,NA,3RD,NA,NA,NA
+2026-07-19,Spain,Argentina,United States,NA,FINAL,NA,NA,NA

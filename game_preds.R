@@ -203,13 +203,13 @@ df_preds_ko  <-
          'logo2' = paste0('flags/', team2, '.png')) %>%
   select(date, team1, logo1, team2, logo2, ko_round, lambda_1, lambda_2, win, draw, loss, win_ko, loss_ko)
 
-for(rnd in c('R32', 'R16', 'QF', 'SF')) {
+for(rnd in c('R32', 'R16', 'QF', 'SF', 'FINAL')) {
   df_rnd <-
     df_preds_ko %>%
     filter(str_detect(ko_round, rnd)) %>%
     select(-ko_round)
   if(nrow(df_rnd) > 0) {
-    subtitles <- list(R32 = 'Round of 32', R16 = 'Round of 16', QF = 'Quarterfinals', SF = 'Semifinals')
+    subtitles <- list(R32 = 'Round of 32', R16 = 'Round of 16', QF = 'Quarterfinals', SF = 'Semifinals', FINAL = 'Final')
     gtsave_extra(make_game_table(df_rnd, 'World Cup 2026 Game Predictions', subtitles[[rnd]], group_stage = F),
                  paste0('figures/matchweek_preds/', tolower(rnd), '_preds.png'), vwidth = 1400)
   }

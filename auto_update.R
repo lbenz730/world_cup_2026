@@ -21,7 +21,7 @@ source('graphics.R')
 source('daily_summary.R')
 
 ### Knockout Table 
-source('ko_matchup_tables.R')
+# source('ko_matchup_tables.R')
 
 ### Comparison Plot for R16
 source('comparison_plot.R')
